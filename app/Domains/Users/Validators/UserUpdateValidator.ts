@@ -14,7 +14,7 @@ export default class UserUpdateValidator {
 
   public messages: CustomMessages = {
     required: '{{ field }} is required',
-    minLength: '{{ field }} must be at least {{ minLength }} characters',
+    minLength: '{{ field }} must be at least {{ options.minLength }} characters',
     unique: '{{ field }} already exists',
   }
 }

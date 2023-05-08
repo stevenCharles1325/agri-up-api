@@ -17,9 +17,12 @@
 | import './routes/customer'
 |
 */
-
+import { join } from 'path'
+import { requireAll } from '@ioc:Adonis/Core/Helpers'
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
+
+Route.group(() => {
+  requireAll(join(__dirname, '../app/Routes'))
 })
+.prefix('/api')

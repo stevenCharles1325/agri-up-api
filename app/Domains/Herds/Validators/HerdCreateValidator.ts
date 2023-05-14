@@ -1,40 +1,38 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class HerdCreateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  /*
-   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
-   *
-   * For example:
-   * 1. The username must be of data type string. But then also, it should
-   *    not contain special characters or numbers.
-   *    ```
-   *     schema.string({}, [ rules.alpha() ])
-   *    ```
-   *
-   * 2. The email must be of data type string, formatted as a valid
-   *    email. But also, not used by any other user.
-   *    ```
-   *     schema.string({}, [
-   *       rules.email(),
-   *       rules.unique({ table: 'users', column: 'email' }),
-   *     ])
-   *    ```
-   */
-  public schema = schema.create({})
+  public schema = schema.create({
+    ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
+    type: schema.enum(['cattle', 'swine', 'goat'] as const),
+    damTag: schema.number.optional([ rules.exists({ table: 'herds', column: 'tag' }), ]),
+    sireTag: schema.number.optional([ rules.exists({ table: 'herds', column: 'tag' }), ]),
+    groupId: schema.number.optional([ rules.exists({ table: 'herd_groups', column: 'id' }), ]),
+    purposeId: schema.number.optional([ rules.exists({ table: 'purposes', column: 'id' }), ]),
+    remarkId: schema.number.optional([ rules.exists({ table: 'remarks', column: 'id' }), ]),
+    breedId: schema.number.optional([ rules.exists({ table: 'breeds', column: 'id' }), ]),
+    status: schema.enum(['pregnant', 'non-lactating', 'deceased', 'culled'] as const),
+    name: schema.string({}, [ rules.minLength(2) ]),
+    gender: schema.enum(['male', 'female'] as const),
+    stage: schema.string(),
+    source: schema.string.optional(),
+    notes: schema.string.optional(),
+    birthWeight: schema.number.optional(),
+    currentWeight: schema.number.optional(),
+    enteredAt: schema.date({}),
+    birthDate: schema.date({}, [ rules.beforeField('enteredAt') ]),
+  })
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    minLength: '{{ field }} must be at least {{ options.minLength }} characters long',
+    'damTag.exists': 'Dam-tag value does not exist',
+    'sireTag.exists': 'Sire-tag value does not exist',
+    'groupId.exists': 'Group value does not exist',
+    'remarkId.exists': 'Remark value does not exist',
+    'breedId.exists': 'Breed value does not exist',
+    'enum': '{{ field }} must be any of the following values: {{ options.choices }}',
+    'birthDate.beforeField': 'Birth-date must be before the Date of Entry',
+  }
 }

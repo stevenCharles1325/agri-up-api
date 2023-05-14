@@ -9,18 +9,19 @@ export default class extends BaseSchema {
       table.integer('tag').unique().unsigned()
 
       table.enum('type', ['cattle', 'swine', 'goat'])
+      table.integer('owner_id').unsigned().references('users.id').onDelete('CASCADE')
       table.integer('dam_tag').nullable().unsigned().references('herds.tag').onDelete('CASCADE')
       table.integer('sire_tag').nullable().unsigned().references('herds.tag').onDelete('CASCADE')
       table.integer('group_id').nullable().unsigned().references('herd_groups.id').onDelete('CASCADE')
       table.integer('purpose_id').nullable().unsigned().references('purposes.id').onDelete('CASCADE')
+      table.integer('breed_id').nullable().unsigned().references('breeds.id').onDelete('CASCADE')
       table.integer('remark_id').nullable().unsigned().references('remarks.id').onDelete('CASCADE')
 
       table.enum('status', ['pregnant', 'non-lactating', 'deceased', 'culled'])
+      table.enum('gender', ['Male', 'Female']).notNullable().defaultTo('Male')
 
-      table.string('name').nullable()
-      table.string('gender').notNullable().defaultTo('Male')
       table.string('stage')
-      table.string('breed')
+      table.string('name').nullable()
       table.string('source').nullable()
       table.string('notes').nullable()
 

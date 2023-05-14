@@ -18,6 +18,7 @@ export default class RemarkUpdateValidator {
   })
 
   public messages: CustomMessages = {
+    required: '{{ field }} is required',
     minLength: '{{ field }} must be at least {{ options.minLength }} characters long',
     requiredWhen: '{{ field }} is required when setting as {{ options.values }}',
     'amount.range': '{{ field }} must be between {{ options.start }} and {{ options.stop }}',

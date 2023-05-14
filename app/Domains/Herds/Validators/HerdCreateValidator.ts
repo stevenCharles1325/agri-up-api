@@ -26,6 +26,7 @@ export default class HerdCreateValidator {
   })
 
   public messages: CustomMessages = {
+    required: '{{ field }} is required',
     minLength: '{{ field }} must be at least {{ options.minLength }} characters long',
     'damTag.exists': 'Dam-tag value does not exist',
     'sireTag.exists': 'Sire-tag value does not exist',

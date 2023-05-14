@@ -1,21 +1,16 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'farm_events'
+  protected tableName = 'feed_names'
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
+
       table.integer('owner_id').unsigned().references('users.id').onDelete('CASCADE')
+      table.string('name')
 
-      table.string('title').notNullable()
-      table.string('description').nullable()
-      table.timestamp('start_at', { useTz: true }).defaultTo(this.now())
-      table.timestamp('end_at', { useTz: true }).defaultTo(this.now())
-
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
+      table.unique(['owner_id', 'name'])
       table.timestamp('created_at', { useTz: true }).defaultTo(this.now())
       table.timestamp('updated_at', { useTz: true }).defaultTo(this.now())
     })

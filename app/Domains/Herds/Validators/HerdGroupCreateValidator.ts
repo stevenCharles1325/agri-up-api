@@ -11,6 +11,7 @@ export default class HerdGroupCreateValidator {
   })
 
   public messages: CustomMessages = {
+    required: '{{ field }} is required',
     minLength: '{{ field }} must be at least {{ options.minLength }} characters long',
   }
 }

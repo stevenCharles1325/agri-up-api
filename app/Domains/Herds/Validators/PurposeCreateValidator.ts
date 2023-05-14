@@ -11,6 +11,7 @@ export default class PurposeCreateValidator {
   })
 
   public messages: CustomMessages = {
+    required: '{{ field }} is required',
     minLength: '{{ field }} must be at least {{ options.minLength }} characters long',
     'herdType.enum': 'Herd type must be one of the following {{ options.choices  }}',
   }

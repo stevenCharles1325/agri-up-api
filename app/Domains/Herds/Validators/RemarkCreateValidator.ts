@@ -20,6 +20,7 @@ export default class RemarkCreateValidator {
   })
 
   public messages: CustomMessages = {
+    required: '{{ field }} is required',
     minLength: '{{ field }} must be at least {{ options.minLength }} characters long',
     requiredWhen: '{{ field }} is required when setting as {{ options.values }}',
     'status.enum': '{{ field }} must be one of the following values {{ options.choices }}',

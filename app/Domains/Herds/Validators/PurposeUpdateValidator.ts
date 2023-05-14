@@ -9,6 +9,7 @@ export default class PurposeUpdateValidator {
   })
 
   public messages: CustomMessages = {
+    required: '{{ field }} is required',
     minLength: '{{ field }} must be at least {{ options.minLength }} characters long',
   }
 }

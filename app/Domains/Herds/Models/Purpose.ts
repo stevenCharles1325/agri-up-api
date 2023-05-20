@@ -17,9 +17,6 @@ export default class Purpose extends BaseModel {
   @column()
   public name: string
 
-  @column()
-  public herdType: string
-
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

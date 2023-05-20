@@ -9,5 +9,5 @@ Route.group(() => {
   // Route.get('/:breedId', 'HerdGroupsController.show')
   // Route.put('/:breedId', 'HerdGroupsController.update')
 })
-.prefix('/herd-groups')
+.prefix('/herd/groups')
 .namespace('App/Domains/Herds/Controllers')

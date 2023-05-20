@@ -8,14 +8,22 @@ export default class RemarksController {
 
   public async store ({ auth, params, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
+    const user = auth.use('jwt').user
     const { herdId } = params
 
+    if (!user) return response.unauthorized('Unauthorized')
+
     const payload = await request.validate(RemarkCreateValidator)
-    // const herd = await Herd.query().where({ id: herdId }).first()
     const herd = await Herd.findOrFail(herdId)
+    // const herd = await Herd.query().where({ id: herdId }).first()
 
     try {
-      await herd.related('remark').create(payload)
+      await herd
+        .related('remark')
+        .create({
+          ...payload,
+          ownerId: user.id,
+        })
       return response.created('Successfully Remarked A Herd')
     } catch (err) {
       console.log(err)

@@ -5,7 +5,7 @@ export default class RemarkCreateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
+    // ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
     status: schema.enum(['sold', 'culled', 'deceased', 'archive'] as const),
     notes: schema.string.optional({}, [ rules.minLength(5) ]),
     amount: schema.number.optional([

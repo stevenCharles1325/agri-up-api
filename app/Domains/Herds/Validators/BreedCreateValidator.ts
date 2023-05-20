@@ -5,9 +5,10 @@ export default class BreedCreateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
+    // ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
+    // herdType: schema.enum.optional(['cattle', 'swine', 'goat'] as const),
+
     name: schema.string({}, [ rules.minLength(5) ]),
-    herdType: schema.enum(['cattle', 'swine', 'goat'] as const),
   })
 
   public messages: CustomMessages = {

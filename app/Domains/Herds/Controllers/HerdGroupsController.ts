@@ -34,9 +34,11 @@ export default class HerdGroupsController {
       if (!user) return response.unauthorized('Unauthorized')
       if (!herdType) return response.badRequest('Invalid Herd Type')
 
-      payload.ownerId = user.id
-      payload.herdType = herdType
-      await HerdGroup.create(payload)
+      await HerdGroup.create({
+        ...payload,
+        ownerId: user.id,
+        herdType,
+      })
 
       return response.ok('Successfully Created New Herd Group')
     } catch (err) {

@@ -3,10 +3,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class HerdCreateValidator {
   constructor(protected ctx: HttpContextContract) {}
-
+  
   public schema = schema.create({
-    ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
-    type: schema.enum(['cattle', 'swine', 'goat'] as const),
     damTag: schema.number.optional([ rules.exists({ table: 'herds', column: 'tag' }), ]),
     sireTag: schema.number.optional([ rules.exists({ table: 'herds', column: 'tag' }), ]),
     groupId: schema.number.optional([ rules.exists({ table: 'herd_groups', column: 'id' }), ]),

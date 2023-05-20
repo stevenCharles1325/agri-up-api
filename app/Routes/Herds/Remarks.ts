@@ -7,5 +7,5 @@ Route.group(() => {
   // Route.get('/', 'PurposesController.index')
   // Route.get('/:breedId', 'HerdsController.show')
 })
-.prefix('/purposes')
+.prefix('/herd/purposes')
 .namespace('App/Domains/Herds/Controllers')

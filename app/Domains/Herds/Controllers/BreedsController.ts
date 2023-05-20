@@ -33,10 +33,11 @@ export default class BreedsController {
       if (!user) return response.unauthorized('Unauthorized')
       if (!herdType) return response.badRequest('Invalid Herd Type')
 
-      payload.ownerId = user.id
-      payload.herdType = herdType
-      await Breed.create(payload)
-
+      await Breed.create({
+        ...payload,
+        herdType,
+        ownerId: user.id,
+      })
       return response.ok('Successfully Created New Breed')
     } catch (err) {
       console.log(err)

@@ -40,10 +40,11 @@ export default class HerdsController {
       if (!user) return response.unauthorized('Unauthorized')
       if (!herdType) return response.badRequest('Invalid Herd Type')
 
-      payload.ownerId = user.id
-      payload.type = herdType
-
-      await Herd.create(payload)
+      await Herd.create({
+        ...payload,
+        ownerId: user.id,
+        type: herdType,
+      })
 
       return response.created('Successfully Created New Herd')
     } catch (err) {
@@ -55,7 +56,7 @@ export default class HerdsController {
     }
   }
 
-  public async edit ({ auth, params, request, response }: HttpContextContract) {
+  public async update ({ auth, params, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const { herdId } = params 
     const payload = await request.validate(HerdUpdateValidator)

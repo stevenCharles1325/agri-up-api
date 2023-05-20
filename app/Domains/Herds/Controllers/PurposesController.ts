@@ -11,19 +11,18 @@ export default class PurposesController {
     return await Purpose.query().where({ ownerId: user.id })
   }
 
-  public async store ({ auth, params, request, response }: HttpContextContract) {
+  public async store ({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const { herdType } = params
     const user = auth.user
     const payload = await request.validate(PurposeCreateValidator)
 
     try {
       if (!user) return response.unauthorized('Unauthorized')
 
-      payload.ownerId = user.id
-      payload.herdType = herdType
-
-      await Purpose.create(payload)
+      await Purpose.create({
+        ...payload,
+        ownerId: user.id,
+      })
       return response.created('Successfully Created New Purpose')
     } catch (err) {
       console.log(err)

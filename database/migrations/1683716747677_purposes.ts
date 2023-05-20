@@ -9,9 +9,8 @@ export default class extends BaseSchema {
       table.integer('owner_id').unsigned().references('users.id').onDelete('CASCADE')
 
       table.string('name')
-      table.enum('herd_type', ['cattle', 'swine', 'goat'])
 
-      table.unique(['name', 'herd_type'])
+      table.unique(['name', 'owner_id'])
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

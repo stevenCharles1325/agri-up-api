@@ -18,6 +18,16 @@ export default class FarmEventsController {
     return response.ok(farmEvents)
   }
 
+  public async show({ auth, request, response }: HttpContextContract) {
+    await auth.use('jwt').authenticate()
+
+    const { farmEventId } = request.all()
+    if (!farmEventId) return response.badRequest('Farm-event ID is missing')
+
+    const farmEvent = await FarmEvent.findOrFail(farmEventId)
+    return response.ok(farmEvent)
+  }
+
   public async store({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const user = auth.user
@@ -36,16 +46,6 @@ export default class FarmEventsController {
 
       return response.internalServerError(err)
     }
-  }
-
-  public async show({ auth, request, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-
-    const { farmEventId } = request.all()
-    if (!farmEventId) return response.badRequest('Farm-event ID is missing')
-
-    const farmEvent = await FarmEvent.findOrFail(farmEventId)
-    return response.ok(farmEvent)
   }
 
   public async update({ auth, request, response }: HttpContextContract) {

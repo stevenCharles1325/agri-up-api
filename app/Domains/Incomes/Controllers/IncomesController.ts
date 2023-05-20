@@ -46,14 +46,14 @@ export default class IncomesController {
 
   public async show({ auth, params }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const { IncomeId } = params
+    const { incomeId } = params
 
-    return await Income.findOrFail(IncomeId)
+    return await Income.findOrFail(incomeId)
   }
 
   public async update({ auth, params, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const { IncomeId } = params
+    const { incomeId } = params
 
     const payload = await request.validate(UpdateIncomeValidator)
     const _payload = {
@@ -77,7 +77,7 @@ export default class IncomesController {
       }
     }
 
-    const income = await Income.findOrFail(IncomeId)
+    const income = await Income.findOrFail(incomeId)
     
     try {
       income.merge(_payload)
@@ -96,9 +96,9 @@ export default class IncomesController {
 
   public async destroy({ auth, params, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const { IncomeId } = params
+    const { incomeId } = params
 
-    const income = await Income.findOrFail(IncomeId)
+    const income = await Income.findOrFail(incomeId)
     try {
       await income.delete()
 

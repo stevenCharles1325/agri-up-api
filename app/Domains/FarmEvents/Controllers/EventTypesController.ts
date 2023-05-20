@@ -42,11 +42,11 @@ export default class EventTypesController {
     }
   }
 
-  public async update({ auth, request, response }: HttpContextContract) {
+  public async update({ auth, params, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     
     const payload = await request.validate(EventTypeUpdateValidator)
-    const { eventTypeId } = request.all()
+    const { eventTypeId } = params
 
     if (!eventTypeId) return response.badRequest('Farm-event ID is missing')
     const eventType = await EventType.findOrFail(eventTypeId)

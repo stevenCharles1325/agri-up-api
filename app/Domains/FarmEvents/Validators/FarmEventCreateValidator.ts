@@ -5,14 +5,14 @@ export default class FarmEventCreateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
+    // ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
     typeId: schema.number.optional([ rules.exists({ table: 'event_types', column: 'id' }) ]),
-    herdId: schema.number.optional([ 
-      rules.requiredWhen('type', '=', 'individual'),
+    category: schema.enum(['mass', 'individual'] as const),
+    herdId: schema.number.optional([
+      rules.requiredWhen('category', '=', 'individual'),
       rules.exists({ table: 'herds', column: 'id' }),
     ]),
     herdType: schema.enum(['cattle', 'swine', 'goat'] as const),
-    category: schema.enum(['mass', 'individual'] as const),
     title: schema.string({}, [ rules.minLength(5) ]),
     description: schema.string.optional({}, [ rules.minLength(5) ]),
     startAt: schema.date(),

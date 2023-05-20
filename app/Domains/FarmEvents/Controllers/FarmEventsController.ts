@@ -36,8 +36,10 @@ export default class FarmEventsController {
     try {
       if (!user) return response.unauthorized('Unauthorized')
 
-      payload.ownerId = user.id
-      await FarmEvent.create(payload)
+      await FarmEvent.create({
+        ...payload,
+        ownerId: user.id
+      })
       return response.created('Successfully created an Event')
     } catch (err) {
       console.log(err)

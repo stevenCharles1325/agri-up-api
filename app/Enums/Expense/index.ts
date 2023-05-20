@@ -5,7 +5,7 @@ export interface IExpenseType {
   labor: "Labor"
   others: "Others"
 }
-
+  
 
 export const EXPENSE_TYPE: IExpenseType = {
   medicineTreatment: 'Medicine/Treatment',

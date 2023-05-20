@@ -6,11 +6,11 @@ import UpdateExpenseValidator from '../Validators/UpdateExpenseValidator'
 export default class ExpensesController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const { searchText } = request.all()
+    const { notes, amountOrder = 'asc' } = request.all()
 
     const expenses = await Expense.query()
-      .where('notes', 'LIKE', `%${searchText}%`)
-      .orderBy('amount', 'asc')
+      .where('notes', 'LIKE', `%${notes}%`)
+      .orderBy('amount', amountOrder)
 
     return response.ok(expenses)
   }

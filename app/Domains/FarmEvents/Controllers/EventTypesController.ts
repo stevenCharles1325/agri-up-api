@@ -30,8 +30,10 @@ export default class EventTypesController {
     try {
       if (!user) return response.unauthorized('Unauthorized')
 
-      payload.ownerId = user.id
-      await EventType.create(payload)
+      await EventType.create({
+        ...payload,
+        ownerId: user.id,
+      })
       return response.created('Successfully Created An Event-type')
     } catch (err) {
       console.log(err)

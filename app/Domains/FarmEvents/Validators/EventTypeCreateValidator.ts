@@ -5,7 +5,7 @@ export default class EventTypeCreateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
+    // ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
     category: schema.enum(['mass', 'individual'] as const),
     name: schema.string({}, [ rules.minLength(2) ]),
   })

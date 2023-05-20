@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
-    "start": "node server.js",
-    "test": "node ace test"
+    "start": "node ./build/server.js",
+    "lint": "eslint . --ext=.ts",
+    "format": "prettier --write .",
+    "heroku-postbuild": "npm run build"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.9.5",

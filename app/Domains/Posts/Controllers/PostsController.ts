@@ -23,15 +23,29 @@ export default class ChatsController {
       const posts = await Post
         .query()
         .whereNotIn('id', hidPostIds)
+        .andWhere('type', 'post')
+        .preload('likes')
         .orderBy('createdAt', 'desc')
         .paginate(page, limit)
-  
-      console.log(posts)
+      
+      // posts
       return response.ok(posts)
     } catch (err) {
       console.log(err)
       return response.internalServerError('Please try again!')
     }
+  }
+
+  public async show({ auth, params, response }: HttpContextContract) {
+    await auth.use('jwt').authenticate()
+    const { postId } = params
+  
+    const post = await Post.findOrFail(postId)
+    await post.load('replies')
+    await post.load('repliedTo')
+    await post.load('likes')
+
+    return response.ok(post)
   }
 
   public async hidePost({ auth, params, response }: HttpContextContract) {
@@ -41,12 +55,22 @@ export default class ChatsController {
 
     if (!user) return response.unauthorized('Unauthorized')
     try {
-      await HidPost.create({
-        postId,
-        userId: user.id,
-      })
+      const record = await HidPost
+          .query()
+          .where('userId', user.id)
+          .where('postId', postId)
+          .first()
 
-      return response.ok("Successfully Hide A Post")
+      if (!record) {
+        await HidPost.create({
+          postId,
+          userId: user.id,
+        })
+
+        return response.ok("Successfully Hide A Post")
+      } else {
+        return response.ok("Already Hid A Post")
+      }
     } catch (err) {
       console.log(err)
       return response.internalServerError('Please try again!')
@@ -58,13 +82,14 @@ export default class ChatsController {
     const user = auth.use('jwt').user
     const { postId } = params
 
+    console.log(user?.id, postId)
     if (!user) return response.unauthorized('Unauthorized')
     try {
       const userLike = await Like
         .query()
         .where('ownerId', user.id)
         .where('postId', postId)
-        .firstOrFail()
+        .first()
 
       if (userLike) {
         await userLike.delete()
@@ -118,7 +143,7 @@ export default class ChatsController {
           .related('replies')
           .create({
             ...payload,
-            type: 'reply',
+            type: 'comment',
             ownerId: user.id,
           })
       } else {
@@ -126,7 +151,7 @@ export default class ChatsController {
           .related('replies')
           .create({
             ...payload,
-            type: 'reply',
+            type: 'comment',
             ownerId: user.id,
           })
       }
@@ -136,14 +161,6 @@ export default class ChatsController {
       console.log(err)
       return response.internalServerError('Please try again!')
     }
-  }
-
-  public async show({ auth, params, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-    const { postId } = params
-  
-    const post = await Post.findOrFail(postId)
-    return response.ok(post)
   }
 
   public async update({ auth, params, request, response }: HttpContextContract) {

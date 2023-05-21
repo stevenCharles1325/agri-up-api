@@ -5,13 +5,16 @@ export default class HerdCreateValidator {
   constructor(protected ctx: HttpContextContract) {}
   
   public schema = schema.create({
+    tag: schema.number([ 
+      rules.range(99, 10000000000000),
+    ]),
     damTag: schema.number.optional([ rules.exists({ table: 'herds', column: 'tag' }), ]),
     sireTag: schema.number.optional([ rules.exists({ table: 'herds', column: 'tag' }), ]),
     groupId: schema.number.optional([ rules.exists({ table: 'herd_groups', column: 'id' }), ]),
     purposeId: schema.number.optional([ rules.exists({ table: 'purposes', column: 'id' }), ]),
     remarkId: schema.number.optional([ rules.exists({ table: 'remarks', column: 'id' }), ]),
     breedId: schema.number.optional([ rules.exists({ table: 'breeds', column: 'id' }), ]),
-    status: schema.enum(['pregnant', 'non-lactating', 'deceased', 'culled'] as const),
+    status: schema.enum.optional(['pregnant', 'non-lactating', 'deceased', 'culled'] as const),
     name: schema.string({}, [ rules.minLength(2) ]),
     gender: schema.enum(['male', 'female'] as const),
     stage: schema.string(),

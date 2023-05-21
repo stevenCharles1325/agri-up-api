@@ -7,7 +7,7 @@ export default class RemarkUpdateValidator {
   public schema = schema.create({
     notes: schema.string.optional({}, [ rules.minLength(5) ]),
     amount: schema.number.optional([
-      rules.range(50, Infinity),
+      rules.range(50, 10000000000000),
       rules.requiredWhen('status', '=', 'sold')
     ]),
     cause: schema.string.optional({}, [

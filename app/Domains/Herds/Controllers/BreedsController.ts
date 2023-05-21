@@ -5,12 +5,12 @@ import BreedCreateValidator from '../Validators/BreedCreateValidator'
 export default class BreedsController {
   public async index ({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const user = auth.user
+    const user = auth.use('jwt').user
     const { herdType = 'cattle' } = request.all()
 
     if (user) {
       try {
-        return await Breed.query().where({ type: herdType, ownerId: user.id }) 
+        return await Breed.query().where({ herdType, ownerId: user.id }) 
       } catch (err) {
         console.log(err)
 
@@ -25,7 +25,7 @@ export default class BreedsController {
 
   public async store ({ auth, params, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const user = auth.user
+    const user = auth.use('jwt').user
     const { herdType } = params
     const payload = await request.validate(BreedCreateValidator)
 

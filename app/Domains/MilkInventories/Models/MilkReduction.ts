@@ -1,12 +1,29 @@
 import { DateTime } from 'luxon'
 import { BaseModel, HasOne, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
-import { string } from '@ioc:Adonis/Core/Helpers'
 import User from 'App/Domains/Users/Models/User'
-import FeedName from './FeedName'
+import MilkInventory from './MilkInventory'
 
-export default class Feed extends BaseModel {
+export default class MilkReduction extends BaseModel {
   @column({ isPrimary: true })
   public id: number
+
+  @column()
+  public herdType: string
+
+  @column()
+  public reason: string
+
+  @column.dateTime()
+  public date: DateTime
+
+  @column()
+  public quantity: number
+
+  @column()
+  public totalAmount?: number
+
+  @column()
+  public notes?: string
 
   @column()
   public ownerId: number
@@ -17,29 +34,12 @@ export default class Feed extends BaseModel {
   public owner: HasOne<typeof User>
 
   @column()
-  public herdType: string
+  public milkId: number
 
-  @column.dateTime()
-  public date: DateTime
-
-  @hasOne(() => FeedName, {
-    foreignKey: 'feedNameId',
+  @hasOne(() => MilkInventory, {
+    foreignKey: 'milkId',
   })
-  public feed: HasOne<typeof FeedName>
-
-  @column()
-  public quantity: number
-
-  @column()
-  public totalAmount: number
-
-  @column()
-  public notes?: string
-
-  @column({
-    prepare: (value: string) => string.capitalCase(value),
-  })
-  public source: string
+  public milk: HasOne<typeof MilkInventory>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

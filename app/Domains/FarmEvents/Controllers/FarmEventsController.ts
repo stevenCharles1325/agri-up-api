@@ -6,7 +6,7 @@ import FarmEventUpdateValidator from '../Validators/FarmEventUpdateValidator'
 export default class FarmEventsController {
   public async index({ auth, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const user = auth.user
+    const user = auth.use('jwt').user
 
     if (!user) return response.unauthorized('Unauthorized')
 
@@ -30,7 +30,7 @@ export default class FarmEventsController {
 
   public async store({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const user = auth.user
+    const user = auth.use('jwt').user
     const payload = await request.validate(FarmEventCreateValidator)
 
     try {

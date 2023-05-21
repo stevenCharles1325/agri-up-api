@@ -17,6 +17,9 @@ export default class FeedName extends BaseModel {
   @column()
   public name: string
 
+  @column()
+  public quantity: number
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

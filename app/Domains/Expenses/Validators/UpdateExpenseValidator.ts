@@ -10,7 +10,7 @@ export default class UpdateExpenseValidator {
       ...Object.values(EXPENSE_TYPE)
     ] as const),
     date: schema.date.optional(),
-    amount: schema.number.optional([ rules.range(1, Infinity) ]),
+    amount: schema.number.optional([ rules.range(1, 10000000000000) ]),
     notes: schema.string.optional({}, [ rules.minLength(3) ]),
   })
 

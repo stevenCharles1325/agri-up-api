@@ -23,5 +23,6 @@ export default class FarmEventCreateValidator {
   public messages: CustomMessages = {
     required: '{{ field }} is required',
     minLength: '{{ field }} must be at least {{ options.minLength }} characters.',
+    requiredWhen: '{{ field }} is required when setting as {{ options.values }}',
   }
 }

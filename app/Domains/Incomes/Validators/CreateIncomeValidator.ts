@@ -24,7 +24,7 @@ export default class CreateIncomeValidator {
       rules.requiredWhen('type', '=', INCOME_TYPES.milkSale),
     ]),
     date: schema.date(),
-    amount: schema.number([ rules.range(1, Infinity) ]),
+    amount: schema.number([ rules.range(1, 10000000000000) ]),
     notes: schema.string.optional({}, [ rules.minLength(5) ]),
   })
 
@@ -32,5 +32,6 @@ export default class CreateIncomeValidator {
     required: '{{ field }} is required',
     range: '{{ field }} must be between {{ options.start }} and {{ options.stop }}',
     minLength: '{{ field }} must be at least {{ options.minLength }} characters',
+    requiredWhen: '{{ field }} is required when setting as {{ options.values }}',
   }
 }

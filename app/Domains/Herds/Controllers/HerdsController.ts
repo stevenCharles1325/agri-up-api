@@ -6,7 +6,7 @@ import HerdUpdateValidator from '../Validators/HerdUpdateValidator'
 export default class HerdsController {
   public async index ({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const user = auth.user
+    const user = auth.use('jwt').user
     if (!user) return response.unauthorized('Unauthorized')
 
     const {
@@ -27,18 +27,31 @@ export default class HerdsController {
     if (gender) herdQuery.where('gender',gender)
     if (remark) herdQuery.where('remark',remark)
 
-    return await herdQuery 
+    return await herdQuery
+      .preload('sire')
+      .preload('dam')
   }
 
   public async store ({ auth, params, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const { herdType } = params
-    const user = auth.user
+    const user = auth.use('jwt').user
     const payload = await request.validate(HerdCreateValidator)
 
     try {
       if (!user) return response.unauthorized('Unauthorized')
       if (!herdType) return response.badRequest('Invalid Herd Type')
+
+      const herd = await Herd
+        .query()
+        .where({
+          type: herdType,
+          tag: payload.tag,
+          ownerId: user.id,
+        })
+        .first()
+      
+      if (herd) return response.badRequest('Herd tag already exists')
 
       await Herd.create({
         ...payload,

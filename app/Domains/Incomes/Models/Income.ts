@@ -7,12 +7,12 @@ export default class Income extends BaseModel {
   public id: number
 
   @column()
-  public userId: number
+  public ownerId: number
 
   @belongsTo(() => User, {
-    foreignKey: 'userId',
+    foreignKey: 'ownerId',
   })
-  public user: BelongsTo<typeof User>
+  public owner: BelongsTo<typeof User>
 
   @column({
     prepare: (value: object) => value && JSON.stringify(value),
@@ -20,7 +20,9 @@ export default class Income extends BaseModel {
   })
   public others: string
 
-  @column()
+  @column({
+    prepare: (value: string) => value?.toLowerCase?.() 
+  })
   public type: string
 
   @column.dateTime()

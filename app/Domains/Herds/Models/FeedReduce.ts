@@ -1,10 +1,26 @@
 import { DateTime } from 'luxon'
 import { BaseModel, HasOne, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Domains/Users/Models/User'
+import FeedName from './FeedName'
 
-export default class Remark extends BaseModel {
+export default class FeedReduce extends BaseModel {
   @column({ isPrimary: true })
   public id: number
+
+  @column()
+  public notes: string
+
+  @column()
+  public quantity: number
+
+  @column()
+  public herdType: string
+
+  @column.dateTime()
+  public date: DateTime
+  
+  @column()
+  public reason: string
 
   @column()
   public ownerId: number
@@ -14,20 +30,13 @@ export default class Remark extends BaseModel {
   })
   public owner: HasOne<typeof User>
 
-  @column.dateTime()
-  public date: DateTime
+  @column()
+  public feedNameId: number
 
-  @column()
-  public notes?: string
-
-  @column()
-  public cause?: string
-  
-  @column()
-  public amount?: number
-
-  @column()
-  public status: string
+  @hasOne(() => FeedName, {
+    foreignKey: 'feedNameId',
+  })
+  public feed: HasOne<typeof FeedName>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

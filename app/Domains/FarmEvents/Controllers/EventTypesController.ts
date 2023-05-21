@@ -7,7 +7,7 @@ export default class EventTypesController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const { category = 'individual' } = request.all()
-    const user = auth.user
+    const user = auth.use('jwt').user
     
     if (!user) return response.unauthorized('Unauthorized')
 
@@ -24,7 +24,7 @@ export default class EventTypesController {
 
   public async store({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const user = auth.user
+    const user = auth.use('jwt').user
     const payload = await request.validate(EventTypeCreateValidator)
 
     try {

@@ -6,9 +6,13 @@ import UpdateIncomeValidator from '../Validators/UpdateIncomeValidator'
 export default class IncomesController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
+    const user = auth.use('jwt').user
+    if (!user) return response.unauthorized('Unauthorized')
+
     const { searchText } = request.all()
 
     const incomes = await Income.query()
+      .where('ownerId', user.id)
       .where('notes', 'LIKE', `%${searchText}%`)
       .orderBy('amount', 'asc')
 
@@ -17,6 +21,8 @@ export default class IncomesController {
 
   public async store({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
+    const user = auth.use('jwt').user
+    if (!user) return response.unauthorized('Unauthorized')
 
     const payload = await request.validate(CreateIncomeValidator)
     const _payload = {
@@ -40,7 +46,10 @@ export default class IncomesController {
       }
     }
 
-    await Income.create(_payload)
+    await Income.create({
+      ..._payload,
+      ownerId: user.id,
+    })
     return response.created('Successfully Created New Income')
   }
 

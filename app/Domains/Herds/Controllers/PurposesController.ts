@@ -5,7 +5,7 @@ import PurposeCreateValidator from '../Validators/PurposeCreateValidator'
 export default class PurposesController {
   public async index ({ auth, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const user = auth.user
+    const user = auth.use('jwt').user
     if (!user) return response.unauthorized('Unauthorized')
 
     return await Purpose.query().where({ ownerId: user.id })
@@ -13,7 +13,7 @@ export default class PurposesController {
 
   public async store ({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const user = auth.user
+    const user = auth.use('jwt').user
     const payload = await request.validate(PurposeCreateValidator)
 
     try {

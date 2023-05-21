@@ -1,10 +1,20 @@
 import { DateTime } from 'luxon'
 import { BaseModel, HasOne, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Domains/Users/Models/User'
+import MilkInventory from './MilkInventory'
 
-export default class Remark extends BaseModel {
+export default class MilkAddition extends BaseModel {
   @column({ isPrimary: true })
   public id: number
+
+  @column()
+  public quantity: number
+
+  @column.dateTime()
+  public date: DateTime
+
+  @column()
+  public notes?: string
 
   @column()
   public ownerId: number
@@ -14,20 +24,13 @@ export default class Remark extends BaseModel {
   })
   public owner: HasOne<typeof User>
 
-  @column.dateTime()
-  public date: DateTime
+  @column()
+  public milkId: number
 
-  @column()
-  public notes?: string
-
-  @column()
-  public cause?: string
-  
-  @column()
-  public amount?: number
-
-  @column()
-  public status: string
+  @hasOne(() => MilkInventory, {
+    foreignKey: 'milkId',
+  })
+  public milk: HasOne<typeof MilkInventory>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

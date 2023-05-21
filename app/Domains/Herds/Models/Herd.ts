@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, HasOne, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, HasOne, belongsTo, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import HerdGroup from 'App/Domains/Herds/Models/HerdGroup'
 import User from 'App/Domains/Users/Models/User'
 import Purpose from './Purpose'
@@ -27,20 +27,20 @@ export default class Herd extends BaseModel {
   @column()
   public damTag: number
 
-  @hasOne(() => Herd, {
+  @belongsTo(() => Herd, {
     localKey: 'tag',
     foreignKey: 'damTag',
   })
-  public dam: HasOne<typeof Herd>
+  public dam: BelongsTo<typeof Herd>
 
   @column()
   public sireTag: number
 
-  @hasOne(() => Herd, {
+  @belongsTo(() => Herd, {
     localKey: 'tag',
     foreignKey: 'sireTag',
   })
-  public sire: HasOne<typeof Herd>
+  public sire: BelongsTo<typeof Herd>
 
   @column()
   public groupId: number
@@ -98,10 +98,10 @@ export default class Herd extends BaseModel {
   @column()
   public currentWeight: number
 
-  @column()
+  @column.dateTime()
   public birthDate: DateTime
 
-  @column()
+  @column.dateTime()
   public enteredAt: DateTime
 
   @column.dateTime({ autoCreate: true })
@@ -110,3 +110,7 @@ export default class Herd extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 }
+function belongTo(arg0: () => typeof Herd, arg1: { localKey: string; foreignKey: string }): (target: Herd, propertyKey: "sire") => void {
+  throw new Error('Function not implemented.')
+}
+

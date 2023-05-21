@@ -23,7 +23,7 @@ export default class UpdateIncomeValidator {
       rules.requiredWhen('type', '=', INCOME_TYPES.milkSale),
     ]),
     date: schema.date.optional(),
-    amount: schema.number.optional([ rules.range(1, Infinity) ]),
+    amount: schema.number.optional([ rules.range(1, 10000000000000) ]),
     notes: schema.string.optional({}, [ rules.minLength(5) ]),
   })
 

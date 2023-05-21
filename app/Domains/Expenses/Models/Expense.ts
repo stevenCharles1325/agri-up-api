@@ -7,12 +7,12 @@ export default class Expense extends BaseModel {
   public id: number
 
   @column()
-  public userId: number
+  public ownerId: number
 
   @belongsTo(() => User, {
-    foreignKey: 'userId',
+    foreignKey: 'ownerId',
   })
-  public user: BelongsTo<typeof User>
+  public owner: BelongsTo<typeof User>
 
   @column()
   public type: string

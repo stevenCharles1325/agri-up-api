@@ -6,10 +6,16 @@ import UpdateExpenseValidator from '../Validators/UpdateExpenseValidator'
 export default class ExpensesController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
-    const { notes, amountOrder = 'asc' } = request.all()
+    const { notes = '', amountOrder = 'asc' } = request.all()
+    const user = auth.use('jwt').user
+    if (!user) return response.unauthorized('Unauthorized')
 
     const expenses = await Expense.query()
-      .where('notes', 'LIKE', `%${notes}%`)
+      .where('ownerId', user.id)
+      .if(
+        notes,
+        (passedQuery) => passedQuery.where('notes', 'LIKE', `%${notes}%`) 
+        )
       .orderBy('amount', amountOrder)
 
     return response.ok(expenses)
@@ -17,9 +23,14 @@ export default class ExpensesController {
 
   public async store({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
+    const user = auth.use('jwt').user
+    if (!user) return response.unauthorized('Unauthorized')
 
     const payload = await request.validate(CreateExpenseValidator)
-    await Expense.create(payload)
+    await Expense.create({
+      ...payload,
+      ownerId: user.id,
+    })
 
     return response.created('Successfully Created New Expense')
   }

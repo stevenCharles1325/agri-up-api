@@ -1,5 +1,4 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Herd from '../Models/Herd'
 import HerdGroupCreateValidator from '../Validators/HerdGroupCreateValidator'
 import HerdGroup from '../Models/HerdGroup'
 

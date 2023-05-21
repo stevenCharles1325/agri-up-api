@@ -110,7 +110,3 @@ export default class Herd extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 }
-function belongTo(arg0: () => typeof Herd, arg1: { localKey: string; foreignKey: string }): (target: Herd, propertyKey: "sire") => void {
-  throw new Error('Function not implemented.')
-}
-

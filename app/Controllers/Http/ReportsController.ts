@@ -3,7 +3,6 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import { IHistoryOption } from 'App/Interfaces/IHistoryOption'
 import ExpenseReporter from 'App/Modules/Reporter/ExpenseReporter'
 import IncomeReporter from 'App/Modules/Reporter/IncomeReporter'
-import HerdSalesReporter from 'App/Modules/Reporter/HerdReporter'
 import HerdReporter from 'App/Modules/Reporter/HerdReporter'
 import MilkReporter from 'App/Modules/Reporter/MilkReporter'
 
@@ -102,12 +101,12 @@ export default class ReportsController {
     try {
       const stocks = await MilkReporter.stocks(cleansedDateFilter, herdType)
       const amountOfMilkSold = await MilkReporter.amountOfMilkSold(cleansedDateFilter, herdType)
-      // const status = await MilkReporter.byStatus(cleansedDateFilter, herdType)
+      const reduction = await MilkReporter.reductions(cleansedDateFilter)
       
       return response.ok({
         stocks,
         amountOfMilkSold,
-        // status,
+        reduction,
       })
     } catch (err) {
       console.log(err)

@@ -150,7 +150,7 @@ export default class MilkReporter {
     return (await result)?.[0]
   }
 
-  public static async reductions (selectedHistory: IHistoryOption, herdType) {
+  public static async reductions (selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let result: any
 

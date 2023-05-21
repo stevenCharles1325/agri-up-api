@@ -9,5 +9,5 @@ Route.group(() => {
   Route.put('/:calendarEventId', 'CalendarsControllers.update')
   Route.delete('/:calendarEventId', 'CalendarsControllers.destroy')
 })
-.prefix('/calendar')
+.prefix('/calendars')
 .namespace('App/Domains/Calendars/Controllers')

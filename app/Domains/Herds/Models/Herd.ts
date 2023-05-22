@@ -19,13 +19,13 @@ export default class Herd extends BaseModel {
   public owner: HasOne<typeof User>
 
   @column()
-  public tag: number
+  public tag: string
 
   @column()
   public type: string
 
   @column()
-  public damTag: number
+  public damTag: string
 
   @belongsTo(() => Herd, {
     localKey: 'tag',
@@ -34,7 +34,7 @@ export default class Herd extends BaseModel {
   public dam: BelongsTo<typeof Herd>
 
   @column()
-  public sireTag: number
+  public sireTag: string
 
   @belongsTo(() => Herd, {
     localKey: 'tag',

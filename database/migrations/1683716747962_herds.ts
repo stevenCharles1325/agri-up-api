@@ -6,12 +6,12 @@ export default class extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('tag').unique().unsigned()
+      table.string('tag').unique()
 
       table.enum('type', ['cattle', 'swine', 'goat'])
       table.integer('owner_id').unsigned().references('users.id').onDelete('CASCADE')
-      table.integer('dam_tag').nullable().unsigned().references('herds.tag').onDelete('CASCADE')
-      table.integer('sire_tag').nullable().unsigned().references('herds.tag').onDelete('CASCADE')
+      table.string('dam_tag').nullable().references('herds.tag').onDelete('CASCADE')
+      table.string('sire_tag').nullable().references('herds.tag').onDelete('CASCADE')
       table.integer('group_id').nullable().unsigned().references('herd_groups.id').onDelete('CASCADE')
       table.integer('purpose_id').nullable().unsigned().references('purposes.id').onDelete('CASCADE')
       table.integer('breed_id').nullable().unsigned().references('breeds.id').onDelete('CASCADE')

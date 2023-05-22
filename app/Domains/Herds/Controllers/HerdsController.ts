@@ -16,7 +16,7 @@ export default class HerdsController {
       stage,
       gender,
       remark,
-      order,
+      order = 'desc',
     } = request.all()
 
     const herdQuery = Herd

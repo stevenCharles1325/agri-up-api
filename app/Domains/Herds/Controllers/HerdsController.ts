@@ -12,9 +12,11 @@ export default class HerdsController {
     const {
       group = 0,
       type = 'swine', 
+      tag,
       stage,
       gender,
       remark,
+      order,
     } = request.all()
 
     const herdQuery = Herd
@@ -24,10 +26,12 @@ export default class HerdsController {
     
     if (group) herdQuery.has('group')
     if (stage) herdQuery.where('stage', stage)
-    if (gender) herdQuery.where('gender',gender)
-    if (remark) herdQuery.where('remark',remark)
+    if (gender) herdQuery.where('gender', gender)
+    if (remark) herdQuery.where('remark', remark)
+    if (tag) herdQuery.whereLike('tag', `%${tag}%`)
 
     return await herdQuery
+      .orderBy('createdAt', order)
       .preload('sire')
       .preload('dam')
   }

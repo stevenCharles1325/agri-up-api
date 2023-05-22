@@ -19,7 +19,7 @@ export default class FeedsController {
       } catch (err) {
         console.log(err)
 
-        if (err.code) return err.code
+        if (err.code) return response.internalServerError(err.code)
 
         return response.internalServerError('Please try again')
       }
@@ -51,7 +51,7 @@ export default class FeedsController {
     } catch (err) {
       console.log(err)
 
-      if (err.code) return err.code
+      if (err.code) return response.internalServerError(err.code)
 
       return response.internalServerError('Please try again')
     }
@@ -86,7 +86,7 @@ export default class FeedsController {
     } catch (err) {
       console.log(err)
 
-      if (err.code) return err.code
+      if (err.code) return response.internalServerError(err.code)
 
       return response.internalServerError('Please try again')
     }

@@ -57,7 +57,7 @@ export default class ExpensesController {
     } catch (err) {
       console.log(err)
 
-      if (err.code) return err.code
+      if (err.code) return response.internalServerError(err.code)
 
       return response.internalServerError('Please try again later')
     }
@@ -76,7 +76,7 @@ export default class ExpensesController {
     } catch (err) {
       console.log(err)
 
-      if (err.code) return err.code
+      if (err.code) return response.internalServerError(err.code)
 
       return response.internalServerError('Please try again later')
     }

@@ -38,7 +38,7 @@ export default class EventTypesController {
     } catch (err) {
       console.log(err)
 
-      if (err.code) return err.code
+      if (err.code) return response.internalServerError(err.code)
 
       return response.internalServerError(err)
     }
@@ -61,7 +61,7 @@ export default class EventTypesController {
     } catch (err) {
       console.log(err)
 
-      if (err.code) return err.code
+      if (err.code) return response.internalServerError(err.code)
 
       return response.internalServerError(err)
     }
@@ -81,7 +81,7 @@ export default class EventTypesController {
     } catch (err) {
       console.log(err)
 
-      if (err.code) return err.code
+      if (err.code) return response.internalServerError(err.code)
 
       return response.internalServerError('Please try again')
     }

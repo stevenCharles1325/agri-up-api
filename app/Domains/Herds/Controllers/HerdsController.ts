@@ -28,7 +28,7 @@ export default class HerdsController {
     if (stage) herdQuery.where('stage', stage)
     if (gender) herdQuery.where('gender', gender)
     if (remark) herdQuery.where('remark', remark)
-    if (tag) herdQuery.whereLike('tag', `%${tag}%`)
+    if (tag) herdQuery.where('tag', 'LIKE', `%${tag}%`)
 
     return await herdQuery
       .orderBy('createdAt', order)

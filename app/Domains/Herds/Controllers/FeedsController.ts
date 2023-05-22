@@ -6,6 +6,7 @@ import FeedReduce from "../Models/FeedReduce";
 import FeedReduceCreateValidator from "../Validators/FeedReduceCreateValidator";
 import FeedRecordCreateValidator from "../Validators/FeedRecordCreateValidator";
 import FeedRecord from "../Models/FeedRecord";
+import Database from "@ioc:Adonis/Lucid/Database";
 
 export default class FeedsController {
   public async index({ auth, request, response }: HttpContextContract) {
@@ -15,7 +16,39 @@ export default class FeedsController {
 
     if (user) {
       try {
-        return await Feed.query().where({ type: herdType, ownerId: user.id });
+        const feeds = await Feed.query()
+          .where("herd_type", herdType)
+          .andWhere("owner_id", user.id)
+          .preload("feedName");
+        return feeds;
+      } catch (err) {
+        console.log(err);
+
+        if (err.code) return response.internalServerError(err.code);
+
+        return response.internalServerError("Please try again");
+      }
+    } else {
+      return response.unauthorized("Unauthorized");
+    }
+  }
+
+  public async currentStocks({ auth, request, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    const { herdType = "cattle" } = request.all();
+
+    if (user) {
+      try {
+        const feeds = await Feed.query()
+          .where("herd_type", herdType)
+          .andWhere("owner_id", user.id)
+          .select("feed_name_id")
+          .sum("quantity as totalQuantity")
+          .groupBy("feed_name_id")
+          .preload("feedName");
+
+        return feeds;
       } catch (err) {
         console.log(err);
 

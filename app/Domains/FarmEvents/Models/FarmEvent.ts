@@ -28,12 +28,15 @@ export default class FarmEvent extends BaseModel {
   public herdType: string
 
   @column()
-  public typeId: number
+  public eventType: string
 
-  @hasOne(() => EventType, {
-    foreignKey: 'typeId',
-  })
-  public type: HasOne<typeof EventType>
+  // @column()
+  // public typeId: number
+
+  // @hasOne(() => EventType, {
+  //   foreignKey: 'typeId',
+  // })
+  // public type: HasOne<typeof EventType>
 
   @column()
   public category: string

@@ -5,7 +5,6 @@ export default class FarmEventUpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    title: schema.string({}, [ rules.minLength(5) ]),
     description: schema.string.optional({}, [ rules.minLength(5) ]),
     others: schema.string.optional({}),
     startAt: schema.date(),

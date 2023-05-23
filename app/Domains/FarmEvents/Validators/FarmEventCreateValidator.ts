@@ -6,7 +6,7 @@ export default class FarmEventCreateValidator {
 
   public schema = schema.create({
     // ownerId: schema.number.optional([ rules.exists({ table: 'users', column: 'id' }) ]),
-    typeId: schema.number.optional([ rules.exists({ table: 'event_types', column: 'id' }) ]),
+    eventType: schema.string({}),
     category: schema.enum(['mass', 'individual'] as const),
     herdTag: schema.number.optional([
       rules.requiredWhen('category', '=', 'individual'),

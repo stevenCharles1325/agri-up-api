@@ -7,9 +7,32 @@ import FeedReduceCreateValidator from "../Validators/FeedReduceCreateValidator";
 import FeedRecordCreateValidator from "../Validators/FeedRecordCreateValidator";
 import FeedRecord from "../Models/FeedRecord";
 import FeedUpdateValidator from "../Validators/FeedUpdateValidator";
-import Database from "@ioc:Adonis/Lucid/Database";
 
 export default class FeedsController {
+  public async currentStocks({ auth, request, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    const { herdType = "cattle" } = request.all();
+
+    if (user) {
+      try {
+        const feeds = await FeedName.query()
+          .where("herd_type", herdType)
+          .andWhere("owner_id", user.id);
+
+        return feeds;
+      } catch (err) {
+        console.log(err);
+
+        if (err.code) return response.internalServerError(err.code);
+
+        return response.internalServerError("Please try again");
+      }
+    } else {
+      return response.unauthorized("Unauthorized");
+    }
+  }
+
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
@@ -20,7 +43,8 @@ export default class FeedsController {
         const feeds = await Feed.query()
           .where("herd_type", herdType)
           .andWhere("owner_id", user.id)
-          .preload("feedName");
+          .preload("feedName")
+          .orderBy("created_at", "desc");
         return feeds;
       } catch (err) {
         console.log(err);
@@ -41,44 +65,7 @@ export default class FeedsController {
     if (user) {
       try {
         const feed = await Feed.query().where("id", params.id).first();
-        console.log("feed ", params.id, feed);
         return feed;
-      } catch (err) {
-        console.log(err);
-
-        if (err.code) return response.internalServerError(err.code);
-
-        return response.internalServerError("Please try again");
-      }
-    } else {
-      return response.unauthorized("Unauthorized");
-    }
-  }
-
-  public async currentStocks({ auth, request, response }: HttpContextContract) {
-    await auth.use("jwt").authenticate();
-    const user = auth.use("jwt").user;
-    const { herdType = "cattle" } = request.all();
-
-    if (user) {
-      try {
-        const feeds = await Feed.query()
-          .select([
-            Database.raw("feed_name_id"),
-            Database.raw("sum(quantity) as totalQuantity"),
-          ])
-          .where("herd_type", herdType)
-          .andWhere("owner_id", user.id)
-          .groupBy("feed_name_id")
-          .preload("feedName");
-
-        const currentStocksData = feeds.map((item, index) => ({
-          feed_name_id: item.feedNameId,
-          feedName: item.feedName.name,
-          totalQuantity: item.$extras.totalQuantity,
-        }));
-
-        return currentStocksData;
       } catch (err) {
         console.log(err);
 

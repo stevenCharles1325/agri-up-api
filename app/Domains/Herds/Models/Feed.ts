@@ -51,6 +51,9 @@ export default class Feed extends BaseModel {
   @column()
   public notes?: string;
 
+  @column()
+  public type: string;
+
   @column({
     prepare: (value: string) => string.capitalCase(value),
   })

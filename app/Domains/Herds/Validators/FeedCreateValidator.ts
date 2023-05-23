@@ -13,6 +13,7 @@ export default class FeedCreateValidator {
     quantity: schema.number([rules.range(1, 10000000000000)]),
     totalAmount: schema.number([rules.range(1, 10000000000000)]),
     notes: schema.string.optional([rules.minLength(5)]),
+    type: schema.enum(["add", "reduced"] as const),
   });
 
   public messages: CustomMessages = {

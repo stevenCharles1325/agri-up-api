@@ -237,6 +237,25 @@ export default class FeedsController {
     }
   }
 
+  public async feedRecordShow({ auth, response, params }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+
+    if (user) {
+      try {
+        const feed = await FeedRecord.query().where("id", params.id).first();
+        return feed;
+      } catch (err) {
+        console.log(err);
+
+        if (err.code) return response.internalServerError(err.code);
+
+        return response.internalServerError("Please try again");
+      }
+    } else {
+      return response.unauthorized("Unauthorized");
+    }
+  }
   // public async deleteAddFeed({ auth, params, response }: HttpContextContract) {
   //   await auth.use("jwt").authenticate();
   //   const { feedId } = params;

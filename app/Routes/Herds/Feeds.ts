@@ -19,6 +19,7 @@ Route.group(() => {
 
 Route.group(() => {
   Route.get("/", "FeedsController.feedRecordIndex");
+  Route.get("/:id", "FeedsController.feedRecordShow");
   Route.post("/:herdType", "FeedsController.feedRecord");
 })
   .prefix("/feeds-records")

@@ -1,8 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, HasOne, belongsTo, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Domains/Users/Models/User'
 import Herd from 'App/Domains/Herds/Models/Herd'
-import EventType from './EventType'
 
 export default class FarmEvent extends BaseModel {
   @column({ isPrimary: true })

@@ -44,6 +44,9 @@ export default class FarmEvent extends BaseModel {
   @column()
   public description?: string
 
+  @column()
+  public others?: string
+
   @column.dateTime()
   public startAt: DateTime
 

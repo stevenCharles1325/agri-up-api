@@ -33,13 +33,16 @@ export default class HerdGroupsController {
       if (!user) return response.unauthorized("Unauthorized");
       if (!herdType) return response.badRequest("Invalid Herd Type");
 
-      await HerdGroup.create({
+      const record = await HerdGroup.create({
         ...payload,
         ownerId: user.id,
         herdType,
       });
 
-      return response.ok("Successfully Created New Herd Group");
+      return response.json({
+        record,
+        message: "Successfully Created New Herd Group",
+      });
     } catch (err) {
       console.log(err);
 

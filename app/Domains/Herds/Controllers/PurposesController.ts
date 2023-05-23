@@ -1,53 +1,56 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Purpose from '../Models/Purpose'
-import PurposeCreateValidator from '../Validators/PurposeCreateValidator'
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import Purpose from "../Models/Purpose";
+import PurposeCreateValidator from "../Validators/PurposeCreateValidator";
 
 export default class PurposesController {
-  public async index ({ auth, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-    const user = auth.use('jwt').user
-    if (!user) return response.unauthorized('Unauthorized')
+  public async index({ auth, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    if (!user) return response.unauthorized("Unauthorized");
 
-    return await Purpose.query().where({ ownerId: user.id })
+    return await Purpose.query().where({ ownerId: user.id });
   }
 
-  public async store ({ auth, request, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-    const user = auth.use('jwt').user
-    const payload = await request.validate(PurposeCreateValidator)
+  public async store({ auth, request, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    const payload = await request.validate(PurposeCreateValidator);
 
     try {
-      if (!user) return response.unauthorized('Unauthorized')
+      if (!user) return response.unauthorized("Unauthorized");
 
-      await Purpose.create({
+      const record = await Purpose.create({
         ...payload,
         ownerId: user.id,
-      })
-      return response.created('Successfully Created New Purpose')
+      });
+      return response.json({
+        record,
+        message: "Successfully Created New Purpose",
+      });
     } catch (err) {
-      console.log(err)
+      console.log(err);
 
-      if (err.code) return response.internalServerError(err.code)
+      if (err.code) return response.internalServerError(err.code);
 
-      return response.internalServerError('Please try again')
+      return response.internalServerError("Please try again");
     }
   }
 
-  public async delete ({ auth, params, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-    const { purposeId } = params
-    
+  public async delete({ auth, params, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { purposeId } = params;
+
     try {
-      const purpose = await Purpose.findOrFail(purposeId)
-      purpose.delete()
+      const purpose = await Purpose.findOrFail(purposeId);
+      purpose.delete();
 
-      return response.created('Successfully Deleted Purpose')
+      return response.created("Successfully Deleted Purpose");
     } catch (err) {
-      console.log(err)
+      console.log(err);
 
-      if (err.code) return response.internalServerError(err.code)
+      if (err.code) return response.internalServerError(err.code);
 
-      return response.internalServerError('Please try again')
+      return response.internalServerError("Please try again");
     }
   }
 }

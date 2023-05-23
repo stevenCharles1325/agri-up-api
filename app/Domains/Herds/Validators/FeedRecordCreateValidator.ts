@@ -5,14 +5,13 @@ export default class FeedRecordCreateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    feedNameId: schema.number([
-      rules.exists({ table: "feed_names", column: "name" }),
-    ]),
+    feedNameId: schema.number(),
     date: schema.date(),
     consumedBy: schema.enum(["individual", "group"] as const),
     quantity: schema.number([rules.range(1, 10000000000000)]),
     consumer: schema.string({ trim: true }, [rules.minLength(1)]),
     notes: schema.string.optional({ trim: true }, [rules.minLength(5)]),
+    time: schema.string.optional({ trim: true }),
   });
 
   public messages: CustomMessages = {

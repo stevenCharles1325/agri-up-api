@@ -15,7 +15,7 @@ export default class FarmEventCreateValidator {
     herdType: schema.enum(['cattle', 'swine', 'goat'] as const),
     title: schema.string({}, [ rules.minLength(5) ]),
     description: schema.string.optional({}, [ rules.minLength(5) ]),
-    other: schema.string.optional({}),
+    others: schema.string.optional({}),
     startAt: schema.date(),
     endAt: schema.date(),
   })

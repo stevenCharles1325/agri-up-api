@@ -7,7 +7,7 @@ export default class FarmEventUpdateValidator {
   public schema = schema.create({
     title: schema.string({}, [ rules.minLength(5) ]),
     description: schema.string.optional({}, [ rules.minLength(5) ]),
-    other: schema.string.optional({}),
+    others: schema.string.optional({}),
     startAt: schema.date(),
     endAt: schema.date(),
   })

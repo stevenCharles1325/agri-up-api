@@ -7,7 +7,7 @@ export default class FarmEventsController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const user = auth.use('jwt').user
-    const { type, herdType, herdTag } = request.all()
+    const { eventType, herdType, herdTag } = request.all()
 
     if (!user) return response.unauthorized('Unauthorized')
 
@@ -15,7 +15,7 @@ export default class FarmEventsController {
       .query()
       .where({ ownerId: user.id })
 
-    if (type) farmEventsQuery.where({ type })
+    if (type) farmEventsQuery.where({ eventType })
     if (herdTag) farmEventsQuery.where({ herdTag })
     if (herdType) farmEventsQuery.where({ herdType })
 

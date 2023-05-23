@@ -6,6 +6,7 @@ import FeedReduce from "../Models/FeedReduce";
 import FeedReduceCreateValidator from "../Validators/FeedReduceCreateValidator";
 import FeedRecordCreateValidator from "../Validators/FeedRecordCreateValidator";
 import FeedRecord from "../Models/FeedRecord";
+import FeedUpdateValidator from "../Validators/FeedUpdateValidator";
 import Database from "@ioc:Adonis/Lucid/Database";
 
 export default class FeedsController {
@@ -33,6 +34,27 @@ export default class FeedsController {
     }
   }
 
+  public async show({ auth, response, params }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+
+    if (user) {
+      try {
+        const feed = await Feed.query().where("id", params.id).first();
+        console.log("feed ", params.id, feed);
+        return feed;
+      } catch (err) {
+        console.log(err);
+
+        if (err.code) return response.internalServerError(err.code);
+
+        return response.internalServerError("Please try again");
+      }
+    } else {
+      return response.unauthorized("Unauthorized");
+    }
+  }
+
   public async currentStocks({ auth, request, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
@@ -41,14 +63,22 @@ export default class FeedsController {
     if (user) {
       try {
         const feeds = await Feed.query()
+          .select([
+            Database.raw("feed_name_id"),
+            Database.raw("sum(quantity) as totalQuantity"),
+          ])
           .where("herd_type", herdType)
           .andWhere("owner_id", user.id)
-          .select("feed_name_id")
-          .sum("quantity as totalQuantity")
           .groupBy("feed_name_id")
           .preload("feedName");
 
-        return feeds;
+        const currentStocksData = feeds.map((item, index) => ({
+          feed_name_id: item.feedNameId,
+          feedName: item.feedName.name,
+          totalQuantity: item.$extras.totalQuantity,
+        }));
+
+        return currentStocksData;
       } catch (err) {
         console.log(err);
 
@@ -87,6 +117,27 @@ export default class FeedsController {
       if (err.code) return response.internalServerError(err.code);
 
       return response.internalServerError("Please try again");
+    }
+  }
+
+  public async updateFeedStock({
+    auth,
+    params,
+    request,
+    response,
+  }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { feedId } = params;
+    const payload = await request.validate(FeedUpdateValidator);
+    const feed = await Feed.findOrFail(feedId);
+    feed.merge(payload);
+
+    try {
+      await feed.save();
+      return response.ok("Successfully Updated Feed");
+    } catch (err) {
+      console.log(err);
+      return response.internalServerError(err.code);
     }
   }
 

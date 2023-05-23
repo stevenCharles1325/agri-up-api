@@ -5,6 +5,7 @@ import User from 'App/Domains/Users/Models/User'
 import Purpose from './Purpose'
 import Remark from './Remark'
 import Breed from './Breed'
+import { string } from '@ioc:Adonis/Core/Helpers'
 
 export default class Herd extends BaseModel {
   @column({ isPrimary: true })
@@ -80,7 +81,9 @@ export default class Herd extends BaseModel {
   @column()
   public name: string
   
-  @column()
+  @column({
+    prepare: (value: string) => string.capitalCase(value),
+  })
   public gender: string
 
   @column()

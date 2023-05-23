@@ -9,4 +9,4 @@ Route.group(() => {
   Route.delete('/:farmEventId', 'FarmEventsController.destroy')
 })
 .prefix('/farm-events')
-.namespace('App/Domains/Expenses/Controllers')
+.namespace('App/Domains/FarmEvents/Controllers')

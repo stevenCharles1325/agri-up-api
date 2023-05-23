@@ -10,3 +10,14 @@ Route.group(() => {
 })
   .prefix("/feeds")
   .namespace("App/Domains/Herds/Controllers");
+
+Route.group(() => {
+  // Route.get("/", "FeedsController.index");
+  // Route.get("/:id", "FeedsController.show");
+  // Route.get("/stocks/current-stocks", "FeedsController.currentStocks");
+  Route.post("/:herdType", "FeedsController.reducedFeed");
+  // Route.put("/:feedId", "FeedsController.updateFeedStock");
+  // Route.delete("/:feedId", "FeedsController.deleteAddFeed");
+})
+  .prefix("/feeds-reduce")
+  .namespace("App/Domains/Herds/Controllers");

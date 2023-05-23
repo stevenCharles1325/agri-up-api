@@ -6,12 +6,13 @@ export default class FeedCreateValidator {
 
   public schema = schema.create({
     feedNameId: schema.number([
-      rules.exists({ table: "feed_names", column: "name" }),
+      rules.exists({ table: "feed_names", column: "id" }),
     ]),
     reason: schema.enum(["spoilt", "lost", "consumed", "others"] as const),
     date: schema.date(),
     quantity: schema.number([rules.range(1, 10000000000000)]),
     notes: schema.string.optional({ trim: true }, [rules.minLength(5)]),
+    type: schema.enum(["add", "reduced"] as const),
   });
 
   public messages: CustomMessages = {

@@ -25,6 +25,7 @@ export default class extends BaseSchema {
       table.integer("total_amount");
       table.string("notes").nullable();
       table.enum("type", ["add", "reduced"]);
+      table.enum("reason", ["spoilt", "lost", "consumed", "others"]).nullable();
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

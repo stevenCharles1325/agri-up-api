@@ -128,7 +128,7 @@ export default class FeedsController {
     }
   }
 
-  public async reduce({
+  public async reducedFeed({
     auth,
     params,
     request,
@@ -151,16 +151,15 @@ export default class FeedsController {
         );
       }
 
-      await FeedReduce.create({
+      await Feed.create({
         ...payload,
         herdType,
         ownerId: user.id,
       });
-
       feedName.quantity = feedName.quantity - payload.quantity;
       await feedName.save();
 
-      return response.ok("Successfully Reduced Feed");
+      return response.ok("Successfully Added Feed");
     } catch (err) {
       console.log(err);
 
@@ -170,71 +169,113 @@ export default class FeedsController {
     }
   }
 
-  public async feedRecord({
-    auth,
-    params,
-    request,
-    response,
-  }: HttpContextContract) {
-    await auth.use("jwt").authenticate();
-    const user = auth.use("jwt").user;
-    const { herdType } = params;
+  // public async reduce({
+  //   auth,
+  //   params,
+  //   request,
+  //   response,
+  // }: HttpContextContract) {
+  //   await auth.use("jwt").authenticate();
+  //   const user = auth.use("jwt").user;
+  //   const { herdType } = params;
+  // const payload = await request.validate(FeedReduceCreateValidator);
 
-    if (!user) return response.unauthorized("Unauthorized");
-    if (!herdType) return response.badRequest("Invalid Herd Type");
+  //   try {
+  //     if (!user) return response.unauthorized("Unauthorized");
+  //     if (!herdType) return response.badRequest("Invalid Herd Type");
 
-    const payload = await request.validate(FeedRecordCreateValidator);
+  //     const feedName = await FeedName.findOrFail(payload.feedNameId);
 
-    try {
-      await FeedRecord.create({
-        ...payload,
-        ownerId: user.id,
-        herdType,
-      });
+  //     if (feedName.quantity < 0 || feedName.quantity < payload.quantity) {
+  //       return response.badRequest(
+  //         "Feed Quantity Is Either 0 or Less Than Reduction Quantity"
+  //       );
+  //     }
 
-      return response.ok("Successfully Created Feed Record");
-    } catch (err) {
-      console.log(err);
+  //     await FeedReduce.create({
+  //       ...payload,
+  //       herdType,
+  //       ownerId: user.id,
+  //     });
 
-      return response.internalServerError("Please try again");
-    }
-  }
+  //     feedName.quantity = feedName.quantity - payload.quantity;
+  //     await feedName.save();
 
-  public async deleteAddFeed({ auth, params, response }: HttpContextContract) {
-    await auth.use("jwt").authenticate();
-    const { feedId } = params;
+  //     return response.ok("Successfully Reduced Feed");
+  //   } catch (err) {
+  //     console.log(err);
 
-    const feed = await Feed.findOrFail(feedId);
-    feed.delete();
+  //     if (err.code) return response.internalServerError(err.code);
 
-    return response.ok("Successfully Deleted Feed");
-  }
+  //     return response.internalServerError("Please try again");
+  //   }
+  // }
 
-  public async deleteReduceFeed({
-    auth,
-    params,
-    response,
-  }: HttpContextContract) {
-    await auth.use("jwt").authenticate();
-    const { feedReduceId } = params;
+  // public async feedRecord({
+  //   auth,
+  //   params,
+  //   request,
+  //   response,
+  // }: HttpContextContract) {
+  //   await auth.use("jwt").authenticate();
+  //   const user = auth.use("jwt").user;
+  //   const { herdType } = params;
 
-    const feedReduce = await FeedReduce.findOrFail(feedReduceId);
-    await feedReduce.delete();
+  //   if (!user) return response.unauthorized("Unauthorized");
+  //   if (!herdType) return response.badRequest("Invalid Herd Type");
 
-    return response.ok("Successfully Deleted Feed");
-  }
+  //   const payload = await request.validate(FeedRecordCreateValidator);
 
-  public async deleteFeedRecord({
-    auth,
-    params,
-    response,
-  }: HttpContextContract) {
-    await auth.use("jwt").authenticate();
-    const { feedRecordId } = params;
+  //   try {
+  //     await FeedRecord.create({
+  //       ...payload,
+  //       ownerId: user.id,
+  //       herdType,
+  //     });
 
-    const feedRecord = await FeedRecord.findOrFail(feedRecordId);
-    await feedRecord.delete();
+  //     return response.ok("Successfully Created Feed Record");
+  //   } catch (err) {
+  //     console.log(err);
 
-    return response.ok("Successfully Deleted Feed");
-  }
+  //     return response.internalServerError("Please try again");
+  //   }
+  // }
+
+  // public async deleteAddFeed({ auth, params, response }: HttpContextContract) {
+  //   await auth.use("jwt").authenticate();
+  //   const { feedId } = params;
+
+  //   const feed = await Feed.findOrFail(feedId);
+  //   feed.delete();
+
+  //   return response.ok("Successfully Deleted Feed");
+  // }
+
+  // public async deleteReduceFeed({
+  //   auth,
+  //   params,
+  //   response,
+  // }: HttpContextContract) {
+  //   await auth.use("jwt").authenticate();
+  //   const { feedReduceId } = params;
+
+  //   const feedReduce = await FeedReduce.findOrFail(feedReduceId);
+  //   await feedReduce.delete();
+
+  //   return response.ok("Successfully Deleted Feed");
+  // }
+
+  // public async deleteFeedRecord({
+  //   auth,
+  //   params,
+  //   response,
+  // }: HttpContextContract) {
+  //   await auth.use("jwt").authenticate();
+  //   const { feedRecordId } = params;
+
+  //   const feedRecord = await FeedRecord.findOrFail(feedRecordId);
+  //   await feedRecord.delete();
+
+  //   return response.ok("Successfully Deleted Feed");
+  // }
 }

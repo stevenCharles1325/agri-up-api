@@ -4,17 +4,22 @@ import FarmEventCreateValidator from '../Validators/FarmEventCreateValidator'
 import FarmEventUpdateValidator from '../Validators/FarmEventUpdateValidator'
 
 export default class FarmEventsController {
-  public async index({ auth, response }: HttpContextContract) {
+  public async index({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const user = auth.use('jwt').user
+    const { type, herdType, herdTag } = request.all()
 
     if (!user) return response.unauthorized('Unauthorized')
 
-    const farmEvents = await FarmEvent
+    const farmEventsQuery = FarmEvent
       .query()
       .where({ ownerId: user.id })
-      .orderBy('start_at')
 
+    if (type) farmEventsQuery.where({ type })
+    if (herdTag) farmEventsQuery.where({ herdTag })
+    if (herdType) farmEventsQuery.where({ herdType })
+
+    const farmEvents = await farmEventsQuery.orderBy('start_at')
     return response.ok(farmEvents)
   }
 

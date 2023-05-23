@@ -16,7 +16,7 @@ export default class FarmEvent extends BaseModel {
   public owner: BelongsTo<typeof User>
 
   @column()
-  public herdTag?: number
+  public herdTag?: string
 
   @belongsTo(() => Herd, {
     foreignKey: 'herdTag',

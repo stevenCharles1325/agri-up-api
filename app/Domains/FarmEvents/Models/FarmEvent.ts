@@ -17,10 +17,10 @@ export default class FarmEvent extends BaseModel {
   public owner: BelongsTo<typeof User>
 
   @column()
-  public herdId?: number
+  public herdTag?: number
 
   @belongsTo(() => Herd, {
-    foreignKey: 'herdId',
+    foreignKey: 'herdTag',
   })
   public herd: BelongsTo<typeof Herd>
 
@@ -37,9 +37,6 @@ export default class FarmEvent extends BaseModel {
 
   @column()
   public category: string
-
-  @column()
-  public title: string
 
   @column()
   public description?: string

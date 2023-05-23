@@ -1,5 +1,12 @@
 import { DateTime } from "luxon";
-import { BaseModel, HasOne, column, hasOne } from "@ioc:Adonis/Lucid/Orm";
+import {
+  BaseModel,
+  BelongsTo,
+  HasOne,
+  belongsTo,
+  column,
+  hasOne,
+} from "@ioc:Adonis/Lucid/Orm";
 import User from "App/Domains/Users/Models/User";
 import FeedName from "./FeedName";
 
@@ -35,6 +42,14 @@ export default class FeedRecord extends BaseModel {
 
   @column()
   public feedNameId: number;
+
+  @belongsTo(() => FeedName, {
+    foreignKey: "feedNameId",
+  })
+  public feedName: BelongsTo<typeof FeedName>;
+
+  @column()
+  public time: string;
 
   @hasOne(() => FeedName, {
     foreignKey: "feedNameId",

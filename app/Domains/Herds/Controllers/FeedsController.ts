@@ -168,6 +168,35 @@ export default class FeedsController {
     }
   }
 
+  public async feedRecordIndex({
+    auth,
+    request,
+    response,
+  }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    const { herdType = "cattle" } = request.all();
+
+    if (user) {
+      try {
+        const feeds = await FeedRecord.query()
+          .where("herd_type", herdType)
+          .andWhere("owner_id", user.id)
+          .preload("feedName")
+          .orderBy("created_at", "desc");
+        return feeds;
+      } catch (err) {
+        console.log(err);
+
+        if (err.code) return response.internalServerError(err.code);
+
+        return response.internalServerError("Please try again");
+      }
+    } else {
+      return response.unauthorized("Unauthorized");
+    }
+  }
+
   public async feedRecord({
     auth,
     params,
@@ -184,11 +213,21 @@ export default class FeedsController {
     const payload = await request.validate(FeedRecordCreateValidator);
 
     try {
+      const feedName = await FeedName.findOrFail(payload.feedNameId);
+      if (feedName.quantity < 0 || feedName.quantity < payload.quantity) {
+        return response.badRequest(
+          "Feed Quantity Is Either 0 or Less Than Reduction Quantity"
+        );
+      }
+
       await FeedRecord.create({
         ...payload,
         ownerId: user.id,
         herdType,
       });
+
+      feedName.quantity = feedName.quantity - payload.quantity;
+      await feedName.save();
 
       return response.ok("Successfully Created Feed Record");
     } catch (err) {

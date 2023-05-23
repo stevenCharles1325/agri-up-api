@@ -16,3 +16,10 @@ Route.group(() => {
 })
   .prefix("/feeds-reduce")
   .namespace("App/Domains/Herds/Controllers");
+
+Route.group(() => {
+  Route.get("/", "FeedsController.feedRecordIndex");
+  Route.post("/:herdType", "FeedsController.feedRecord");
+})
+  .prefix("/feeds-records")
+  .namespace("App/Domains/Herds/Controllers");

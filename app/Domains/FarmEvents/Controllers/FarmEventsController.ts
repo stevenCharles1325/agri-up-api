@@ -15,9 +15,9 @@ export default class FarmEventsController {
       .query()
       .where({ ownerId: user.id })
 
-    if (type) farmEventsQuery.where({ eventType })
     if (herdTag) farmEventsQuery.where({ herdTag })
     if (herdType) farmEventsQuery.where({ herdType })
+    if (eventType) farmEventsQuery.where({ eventType })
 
     const farmEvents = await farmEventsQuery.orderBy('start_at')
     return response.ok(farmEvents)

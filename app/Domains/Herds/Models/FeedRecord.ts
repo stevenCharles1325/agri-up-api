@@ -1,49 +1,49 @@
-import { DateTime } from 'luxon'
-import { BaseModel, HasOne, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
-import User from 'App/Domains/Users/Models/User'
-import FeedName from './FeedName'
+import { DateTime } from "luxon";
+import { BaseModel, HasOne, column, hasOne } from "@ioc:Adonis/Lucid/Orm";
+import User from "App/Domains/Users/Models/User";
+import FeedName from "./FeedName";
 
 export default class FeedRecord extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public notes: string
+  public notes: string;
 
   @column()
-  public quantity: number
+  public quantity: number;
 
   @column()
-  public herdType: string
+  public herdType: string;
 
   @column.dateTime()
-  public date: DateTime
-  
-  @column()
-  public consumedBy: string
+  public date: DateTime;
 
   @column()
-  public consumer: string
+  public consumedBy: string;
 
   @column()
-  public ownerId: number
+  public consumer: string;
+
+  @column()
+  public ownerId: number;
 
   @hasOne(() => User, {
-    foreignKey: 'ownerId',
+    foreignKey: "ownerId",
   })
-  public owner: HasOne<typeof User>
+  public owner: HasOne<typeof User>;
 
   @column()
-  public feedNameId: number
+  public feedNameId: number;
 
   @hasOne(() => FeedName, {
-    foreignKey: 'feedNameId',
+    foreignKey: "feedNameId",
   })
-  public feed: HasOne<typeof FeedName>
+  public feed: HasOne<typeof FeedName>;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 }

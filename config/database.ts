@@ -68,8 +68,7 @@ const databaseConfig: DatabaseConfig = {
     | npm i mysql2
     |
     */
-    mysql: developmentConfig,
-    // mysql: Application.inProduction ? productionConfig : developmentConfig,
+    mysql: Application.inProduction ? productionConfig : developmentConfig,
   },
 };
 

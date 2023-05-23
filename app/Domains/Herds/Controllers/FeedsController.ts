@@ -2,10 +2,7 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Feed from "../Models/Feed";
 import FeedCreateValidator from "../Validators/FeedCreateValidator";
 import FeedName from "../Models/FeedName";
-import FeedReduce from "../Models/FeedReduce";
 import FeedReduceCreateValidator from "../Validators/FeedReduceCreateValidator";
-import FeedRecordCreateValidator from "../Validators/FeedRecordCreateValidator";
-import FeedRecord from "../Models/FeedRecord";
 import FeedUpdateValidator from "../Validators/FeedUpdateValidator";
 
 export default class FeedsController {

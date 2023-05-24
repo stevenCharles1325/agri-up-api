@@ -7,10 +7,11 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer('owner_id').unsigned().references('users.id').onDelete('CASCADE')
-      table.integer('type_id').unsigned().references('event_types.id').onDelete('CASCADE')
 
       // If 'type' is set to individual then the herd_id must be present
-      table.integer('herd_id').nullable().unsigned().references('users.id').onDelete('CASCADE')
+      table.integer('herd_tag').nullable()
+      table.integer('group_id').nullable()
+
       table.enum('herd_type', ['cattle', 'swine', 'goat']).notNullable()
       table.enum('category', ['mass', 'individual']).notNullable().defaultTo('individual')
 

@@ -9,7 +9,6 @@ export default class extends BaseSchema {
       table.integer('owner_id').unsigned().references('users.id').onDelete('CASCADE')
 
       // If 'type' is set to individual then the herd_id must be present
-      table.integer('herd_tag').nullable()
       table.integer('group_id').nullable()
 
       table.enum('herd_type', ['cattle', 'swine', 'goat']).notNullable()

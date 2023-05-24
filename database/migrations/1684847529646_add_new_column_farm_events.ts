@@ -7,7 +7,7 @@ export default class extends BaseSchema {
     this.schema.alterTable(this.tableName, (table) => {
       table.dropForeign('herd_id')
       table.dropColumns('title', 'herd_id')
-      table.string('herd_tag').notNullable().references('herds.tag').onDelete('CASCADE')
+      table.string('herd_tag').nullable()
     })
   }
 

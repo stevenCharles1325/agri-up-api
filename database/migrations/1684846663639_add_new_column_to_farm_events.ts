@@ -5,7 +5,6 @@ export default class extends BaseSchema {
 
   public async up () {
     this.schema.alterTable(this.tableName, (table) => {
-      table.dropColumn('other_data')
       table.string('others')
     })
   }

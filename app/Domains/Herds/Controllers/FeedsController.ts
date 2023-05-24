@@ -256,15 +256,15 @@ export default class FeedsController {
       return response.unauthorized("Unauthorized");
     }
   }
-  // public async deleteAddFeed({ auth, params, response }: HttpContextContract) {
-  //   await auth.use("jwt").authenticate();
-  //   const { feedId } = params;
+  public async deleteAddFeed({ auth, params, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { feedId } = params;
 
-  //   const feed = await Feed.findOrFail(feedId);
-  //   feed.delete();
+    const feed = await Feed.findOrFail(feedId);
+    feed.delete();
 
-  //   return response.ok("Successfully Deleted Feed");
-  // }
+    return response.ok("Successfully Deleted Feed");
+  }
 
   // public async deleteReduceFeed({
   //   auth,

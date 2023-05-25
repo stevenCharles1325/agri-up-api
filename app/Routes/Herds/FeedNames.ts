@@ -8,3 +8,12 @@ Route.group(() => {
 })
   .prefix("/feeds/names")
   .namespace("App/Domains/Herds/Controllers");
+
+Route.group(() => {
+  Route.get("/", "SellingPricePerKiloController.index");
+
+  Route.post("/:herdType", "SellingPricePerKiloController.store");
+  //   Route.delete("/:breedId", "HerdGroupsController.destroy");
+})
+  .prefix("/selling-price-per-kilo")
+  .namespace("App/Domains/Herds/Controllers");

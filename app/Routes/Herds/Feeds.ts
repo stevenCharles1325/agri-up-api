@@ -21,6 +21,7 @@ Route.group(() => {
   Route.get("/", "FeedsController.feedRecordIndex");
   Route.get("/:id", "FeedsController.feedRecordShow");
   Route.post("/:herdType", "FeedsController.feedRecord");
+  Route.delete("/:id", "FeedsController.deleteFeedRecord");
 })
   .prefix("/feeds-records")
   .namespace("App/Domains/Herds/Controllers");

@@ -280,17 +280,17 @@ export default class FeedsController {
   //   return response.ok("Successfully Deleted Feed");
   // }
 
-  // public async deleteFeedRecord({
-  //   auth,
-  //   params,
-  //   response,
-  // }: HttpContextContract) {
-  //   await auth.use("jwt").authenticate();
-  //   const { feedRecordId } = params;
+  public async deleteFeedRecord({
+    auth,
+    params,
+    response,
+  }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { id } = params;
 
-  //   const feedRecord = await FeedRecord.findOrFail(feedRecordId);
-  //   await feedRecord.delete();
+    const feedRecord = await FeedRecord.findOrFail(id);
+    await feedRecord.delete();
 
-  //   return response.ok("Successfully Deleted Feed");
-  // }
+    return response.ok("Successfully Deleted Feed");
+  }
 }

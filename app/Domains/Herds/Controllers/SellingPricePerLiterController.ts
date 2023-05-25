@@ -1,16 +1,19 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import HerdGroupCreateValidator from "../Validators/HerdGroupCreateValidator";
-import FeedName from "../Models/FeedName";
+import SellingPricePerLiter from "../Models/SellingPricePerLiter";
 
-export default class FeedNamesController {
+export default class SellingPricePerLiterController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
-    const herdType = request.input("herdType", "cattle");
+    const { herdType = "cattle" } = request.all();
 
     if (user) {
       try {
-        return await FeedName.query().where({ herdType, ownerId: user.id });
+        return await SellingPricePerLiter.query().where({
+          herdType,
+          ownerId: user.id,
+        });
       } catch (err) {
         console.log(err);
 
@@ -33,7 +36,7 @@ export default class FeedNamesController {
       if (!user) return response.unauthorized("Unauthorized");
       if (!herdType) return response.badRequest("Invalid Herd Type");
 
-      const feedName = await FeedName.create({
+      const feedName = await SellingPricePerLiter.create({
         ...payload,
         ownerId: user.id,
         herdType,
@@ -41,7 +44,7 @@ export default class FeedNamesController {
 
       return response.json({
         feedName,
-        message: "Successfully Created New Herd Group",
+        message: "Successfully Created New SellingPricePerLiter",
       });
     } catch (err) {
       console.log(err);
@@ -51,14 +54,4 @@ export default class FeedNamesController {
       return response.internalServerError("Please try again");
     }
   }
-
-  //   public async delete({ auth, params, response }: HttpContextContract) {
-  //     await auth.use("jwt").authenticate();
-  //     const { herdGroupId } = params;
-
-  //     const herdGroup = await HerdGroup.findOrFail(herdGroupId);
-  //     herdGroup.delete();
-
-  //     return response.ok("Successfully Deleted Herd Group");
-  //   }
 }

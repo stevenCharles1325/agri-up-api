@@ -3,17 +3,20 @@ import Purpose from "../Models/Purpose";
 import PurposeCreateValidator from "../Validators/PurposeCreateValidator";
 
 export default class PurposesController {
-  public async index({ auth, response }: HttpContextContract) {
+  public async index({ auth, response, request }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
     if (!user) return response.unauthorized("Unauthorized");
 
-    return await Purpose.query().where({ ownerId: user.id });
+    const herdType = request.input("herdType", "cattle");
+
+    return await Purpose.query().where({ herdType, ownerId: user.id });
   }
 
-  public async store({ auth, request, response }: HttpContextContract) {
+  public async store({ auth, request, response, params }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
+    const { herdType } = params;
     const payload = await request.validate(PurposeCreateValidator);
 
     try {
@@ -22,6 +25,7 @@ export default class PurposesController {
       const record = await Purpose.create({
         ...payload,
         ownerId: user.id,
+        herdType,
       });
       return response.json({
         record,

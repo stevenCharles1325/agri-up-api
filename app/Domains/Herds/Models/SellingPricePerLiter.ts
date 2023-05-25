@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 import { BaseModel, HasOne, column, hasOne } from "@ioc:Adonis/Lucid/Orm";
 import User from "App/Domains/Users/Models/User";
 
-export default class Purpose extends BaseModel {
+export default class SellingPricePerLiter extends BaseModel {
   @column({ isPrimary: true })
   public id: number;
 
@@ -16,6 +16,9 @@ export default class Purpose extends BaseModel {
 
   @column()
   public name: string;
+
+  @column()
+  public quantity: number;
 
   @column()
   public herdType: string;

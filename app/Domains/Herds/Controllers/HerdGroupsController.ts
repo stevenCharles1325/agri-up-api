@@ -6,7 +6,7 @@ export default class HerdGroupsController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
-    const { herdType = "cattle" } = request.all();
+    const herdType = request.input("herdType", "cattle");
 
     if (user) {
       try {

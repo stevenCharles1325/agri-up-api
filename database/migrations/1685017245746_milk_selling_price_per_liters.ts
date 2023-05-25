@@ -1,23 +1,21 @@
 import BaseSchema from "@ioc:Adonis/Lucid/Schema";
 
 export default class extends BaseSchema {
-  protected tableName = "purposes";
+  protected tableName = "selling_price_per_liters";
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments("id");
+
       table
         .integer("owner_id")
         .unsigned()
         .references("users.id")
         .onDelete("CASCADE");
-
       table.string("name");
       table.enum("herd_type", ["cattle", "swine", "goat"]);
-      table.unique(["name", "owner_id"]);
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
+
+      table.unique(["owner_id", "name"]);
       table.timestamp("created_at", { useTz: true }).defaultTo(this.now());
       table.timestamp("updated_at", { useTz: true }).defaultTo(this.now());
     });

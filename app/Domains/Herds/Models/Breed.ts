@@ -1,28 +1,28 @@
-import { DateTime } from 'luxon'
-import { BaseModel, HasOne, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
-import User from 'App/Domains/Users/Models/User'
+import { DateTime } from "luxon";
+import { BaseModel, HasOne, column, hasOne } from "@ioc:Adonis/Lucid/Orm";
+import User from "App/Domains/Users/Models/User";
 
 export default class Breed extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public ownerId: number
+  public ownerId: number;
 
   @hasOne(() => User, {
-    foreignKey: 'ownerId',
+    foreignKey: "ownerId",
   })
-  public owner: HasOne<typeof User>
+  public owner: HasOne<typeof User>;
 
   @column()
-  public name: string
+  public name: string;
 
   @column()
-  public herdType: string
+  public herdType: string;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 }

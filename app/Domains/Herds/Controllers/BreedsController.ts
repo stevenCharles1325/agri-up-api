@@ -51,7 +51,7 @@ export default class BreedsController {
     }
   }
 
-  public async delete({ auth, params, response }: HttpContextContract) {
+  public async destroy({ auth, params, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const { breedId } = params;
 

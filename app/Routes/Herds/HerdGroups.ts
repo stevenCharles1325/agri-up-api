@@ -4,7 +4,7 @@ Route.group(() => {
   Route.get("/", "HerdGroupsController.index");
 
   Route.post("/:herdType", "HerdGroupsController.store");
-  Route.delete("/:breedId", "HerdGroupsController.destroy");
+  Route.delete("/:herdGroupId", "HerdGroupsController.destroy");
 
   // Route.get('/:breedId', 'HerdGroupsController.show')
   // Route.put('/:breedId', 'HerdGroupsController.update')

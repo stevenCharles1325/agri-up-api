@@ -1,13 +1,10 @@
-import Route from '@ioc:Adonis/Core/Route'
+import Route from "@ioc:Adonis/Core/Route";
 
 Route.group(() => {
-  Route.get('/', 'BreedsController.index')
+  Route.get("/", "BreedsController.index");
 
-  Route.post('/:herdType', 'BreedsController.store')
-  Route.delete('/:breedId', 'BreedsController.destroy')
-
-  // Route.get('/:breedId', 'BreedsController.show')
-  // Route.put('/:breedId', 'BreedsController.update')
+  Route.post("/:herdType", "BreedsController.store");
+  Route.delete("/:breedId", "BreedsController.destroy");
 })
-.prefix('/herd/breeds')
-.namespace('App/Domains/Herds/Controllers')
+  .prefix("/herd/breeds")
+  .namespace("App/Domains/Herds/Controllers");

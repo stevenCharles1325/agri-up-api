@@ -52,13 +52,13 @@ export default class FeedNamesController {
     }
   }
 
-  //   public async delete({ auth, params, response }: HttpContextContract) {
-  //     await auth.use("jwt").authenticate();
-  //     const { herdGroupId } = params;
+  public async destroy({ auth, params, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { feedId } = params;
 
-  //     const herdGroup = await HerdGroup.findOrFail(herdGroupId);
-  //     herdGroup.delete();
+    const herdGroup = await FeedName.findOrFail(feedId);
+    herdGroup.delete();
 
-  //     return response.ok("Successfully Deleted Herd Group");
-  //   }
+    return response.ok("Successfully Deleted Herd Group");
+  }
 }

@@ -54,4 +54,14 @@ export default class SellingPricePerLiterController {
       return response.internalServerError("Please try again");
     }
   }
+
+  public async destroy({ auth, params, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { id } = params;
+
+    const herdGroup = await SellingPricePerLiter.findOrFail(id);
+    herdGroup.delete();
+
+    return response.ok("Successfully Deleted Herd Group");
+  }
 }

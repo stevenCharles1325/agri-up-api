@@ -33,6 +33,19 @@ export default class FeedNamesController {
       if (!user) return response.unauthorized("Unauthorized");
       if (!herdType) return response.badRequest("Invalid Herd Type");
 
+      const isDuplicate = await FeedName.query()
+        .where("name", payload.name)
+        .andWhere("herd_type", herdType)
+        .andWhere("owner_id", user.id)
+        .first();
+
+      if (isDuplicate) {
+        return response.status(400).json({
+          status: 400,
+          message: "This FeedName already exist.",
+        });
+      }
+
       const feedName = await FeedName.create({
         ...payload,
         ownerId: user.id,

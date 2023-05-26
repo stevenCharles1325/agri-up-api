@@ -22,6 +22,19 @@ export default class PurposesController {
     try {
       if (!user) return response.unauthorized("Unauthorized");
 
+      const isDuplicate = await Purpose.query()
+        .where("name", payload.name)
+        .andWhere("herd_type", herdType)
+        .andWhere("owner_id", user.id)
+        .first();
+
+      if (isDuplicate) {
+        return response.status(400).json({
+          status: 400,
+          message: "This Purpose already exist.",
+        });
+      }
+
       const record = await Purpose.create({
         ...payload,
         ownerId: user.id,

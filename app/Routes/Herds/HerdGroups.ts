@@ -6,8 +6,7 @@ Route.group(() => {
   Route.post("/:herdType", "HerdGroupsController.store");
   Route.delete("/:herdGroupId", "HerdGroupsController.destroy");
 
-  // Route.get('/:breedId', 'HerdGroupsController.show')
-  // Route.put('/:breedId', 'HerdGroupsController.update')
+  Route.put("/:id/:herdType", "HerdGroupsController.update");
 })
   .prefix("/herd/groups")
   .namespace("App/Domains/Herds/Controllers");

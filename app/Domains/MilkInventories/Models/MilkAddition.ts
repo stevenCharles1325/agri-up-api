@@ -1,40 +1,46 @@
-import { DateTime } from 'luxon'
-import { BaseModel, HasOne, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
-import User from 'App/Domains/Users/Models/User'
-import MilkInventory from './MilkInventory'
+import { DateTime } from "luxon";
+import { BaseModel, HasOne, column, hasOne } from "@ioc:Adonis/Lucid/Orm";
+import User from "App/Domains/Users/Models/User";
+import MilkInventory from "./MilkInventory";
 
 export default class MilkAddition extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public quantity: number
+  public quantity: number;
 
   @column.dateTime()
-  public date: DateTime
+  public date: DateTime;
 
   @column()
-  public notes?: string
+  public notes?: string;
 
   @column()
-  public ownerId: number
+  public herdType: string;
+
+  @column()
+  public ownerId: number;
 
   @hasOne(() => User, {
-    foreignKey: 'ownerId',
+    foreignKey: "ownerId",
   })
-  public owner: HasOne<typeof User>
+  public owner: HasOne<typeof User>;
 
   @column()
-  public milkId: number
+  public milkId: number;
 
   @hasOne(() => MilkInventory, {
-    foreignKey: 'milkId',
+    foreignKey: "milkId",
   })
-  public milk: HasOne<typeof MilkInventory>
+  public milk: HasOne<typeof MilkInventory>;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
+
+  @column.dateTime()
+  public deletedAt: DateTime | null;
 }

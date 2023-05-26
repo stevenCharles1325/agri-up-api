@@ -11,20 +11,22 @@ export default class extends BaseSchema {
         .unsigned()
         .references("users.id")
         .onDelete("CASCADE");
-      table
-        .integer("milk_id")
-        .unsigned()
-        .references("milk_inventories.id")
-        .onDelete("CASCADE");
+      // table
+      //   .integer("milk_id")
+      //   .unsigned()
+      //   .references("milk_inventories.id")
+      //   .onDelete("CASCADE");
 
       table.timestamp("date", { useTz: true }).defaultTo(this.now());
       table.integer("quantity").unsigned().comment("Liters");
       table.string("notes").nullable();
+      table.enum("herd_type", ["cattle", "goat"]);
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
       table.timestamp("created_at", { useTz: true }).defaultTo(this.now());
       table.timestamp("updated_at", { useTz: true }).defaultTo(this.now());
+      table.timestamp("deleted_at", { useTz: true }).defaultTo(null);
     });
   }
 

@@ -2,12 +2,16 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Calendar from '../Models/Calendar'
 import CalendarUpdateValidator from '../Validators/CalendarUpdateValidator'
 import CalendarCreateValidator from '../Validators/CalendarCreateValidator'
+import { DateTime } from 'luxon'
 
 export default class CalendarsController {
   public async index ({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const user = auth.use('jwt').user
-    const { startDate, endDate } = request.all()
+    const { 
+      startDate, 
+      endDate 
+    } = request.all()
 
     if (!user) return response.unauthorized('Unauthorized')
 

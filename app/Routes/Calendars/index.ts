@@ -1,13 +1,13 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-  Route.get('/', 'CalendarsControllers.index')
-  Route.get('/:calendarEventId', 'CalendarsControllers.show')
-  Route.put('/mark-as-done/:calendarEventId', 'CalendarsControllers.markAsDone')
+  Route.get('/', 'CalendarsController.index')
+  Route.get('/:calendarEventId', 'CalendarsController.show')
+  Route.put('/mark-as-done/:calendarEventId', 'CalendarsController.markAsDone')
 
-  Route.post('/', 'CalendarsControllers.store')
-  Route.put('/:calendarEventId', 'CalendarsControllers.update')
-  Route.delete('/:calendarEventId', 'CalendarsControllers.destroy')
+  Route.post('/', 'CalendarsController.store')
+  Route.put('/:calendarEventId', 'CalendarsController.update')
+  Route.delete('/:calendarEventId', 'CalendarsController.destroy')
 })
 .prefix('/calendars')
 .namespace('App/Domains/Calendars/Controllers')

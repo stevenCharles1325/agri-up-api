@@ -21,3 +21,10 @@ Route.group(() => {
 })
   .prefix("/milk-additions")
   .namespace("App/Domains/MilkInventories/Controllers");
+
+//reduction show
+Route.group(() => {
+  Route.get("/:id", "MilkInventoriesController.showReductions");
+})
+  .prefix("/milk-reductions")
+  .namespace("App/Domains/MilkInventories/Controllers");

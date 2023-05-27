@@ -1,28 +1,34 @@
-import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import BaseSchema from "@ioc:Adonis/Lucid/Schema";
 
 export default class extends BaseSchema {
-  protected tableName = 'milk_reductions'
+  protected tableName = "milk_reductions";
 
-  public async up () {
+  public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-      table.integer('owner_id').unsigned().references('users.id').onDelete('CASCADE')
-      table.integer('milk_id').unsigned().references('milk_inventories.id').onDelete('CASCADE')
-      table.enum('reason', ['spoilt/spilled', 'lost/stolen', 'sold', 'gift'])
+      table.increments("id");
+      table
+        .integer("owner_id")
+        .unsigned()
+        .references("users.id")
+        .onDelete("CASCADE");
+      // table.integer('milk_id').unsigned().references('milk_inventories.id').onDelete('CASCADE')
+      table.enum("reason", ["spoilt/spilled", "lost/stolen", "sold", "gift"]);
 
-      table.timestamp('date', { useTz: true }).defaultTo(this.now())
-      table.integer('quantity').unsigned().comment('Liters')
-      table.integer('total_amount').unsigned().nullable()
-      table.string('notes').nullable()
+      table.timestamp("date", { useTz: true }).defaultTo(this.now());
+      table.integer("quantity").unsigned().comment("Liters");
+      table.integer("total_amount").unsigned().nullable();
+      table.string("notes").nullable();
+      table.enum("herd_type", ["cattle", "goat"]);
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.timestamp('created_at', { useTz: true }).defaultTo(this.now())
-      table.timestamp('updated_at', { useTz: true }).defaultTo(this.now())
-    })
+      table.timestamp("created_at", { useTz: true }).defaultTo(this.now());
+      table.timestamp("updated_at", { useTz: true }).defaultTo(this.now());
+      table.timestamp("deleted_at", { useTz: true }).defaultTo(null);
+    });
   }
 
-  public async down () {
-    this.schema.dropTable(this.tableName)
+  public async down() {
+    this.schema.dropTable(this.tableName);
   }
 }

@@ -2,9 +2,9 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import MilkAdditionCreateValidator from "../Validators/MilkAdditionCreateValidator";
 import MilkAddition from "../Models/MilkAddition";
 import { DateTime } from "luxon";
+import MilkReduction from "../Models/MilkReduction";
 
 export default class MilkInventoriesController {
-  //additions
   public async index({ auth, response, params, request }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
@@ -16,6 +16,18 @@ export default class MilkInventoriesController {
     try {
       if (type === "additions") {
         const query = MilkAddition.query()
+          .where("herd_type", herdType)
+          .where("ownerId", user.id)
+          .whereNull("deleted_at");
+
+        if (search) {
+          query.where("notes", "like", `%${search.toLowerCase().trim()}%`);
+        }
+
+        const milks = await query.orderBy("createdAt", "desc");
+        return response.ok(milks);
+      } else if (type === "reductions") {
+        const query = MilkReduction.query()
           .where("herd_type", herdType)
           .where("ownerId", user.id)
           .whereNull("deleted_at");
@@ -49,9 +61,15 @@ export default class MilkInventoriesController {
           ownerId: user.id,
           herdType: herdType,
         });
+        return response.ok("Successfully Added Milk");
+      } else if (type === "reductions") {
+        await MilkReduction.create({
+          ...payload,
+          ownerId: user.id,
+          herdType: herdType,
+        });
+        return response.ok("Successfully Reduced Milk");
       }
-
-      return response.ok("Successfully Added Milk");
     } catch (err) {
       console.log(err);
 
@@ -70,6 +88,15 @@ export default class MilkInventoriesController {
         await record.save();
       } else {
         const record = await MilkAddition.findOrFail(id);
+        record.delete();
+      }
+    } else if (type === "reductions") {
+      if (actionType === "archive") {
+        const record = await MilkReduction.findOrFail(id);
+        record.deletedAt = DateTime.now();
+        await record.save();
+      } else {
+        const record = await MilkReduction.findOrFail(id);
         record.delete();
       }
     }
@@ -99,6 +126,10 @@ export default class MilkInventoriesController {
         const record = await MilkAddition.findOrFail(id);
         record.merge(payload);
         await record.save();
+      } else if (actionType === "reductions") {
+        const record = await MilkReduction.findOrFail(id);
+        record.merge(payload);
+        await record.save();
       }
 
       return response.ok("Successfully Updated");
@@ -118,6 +149,26 @@ export default class MilkInventoriesController {
     if (user) {
       try {
         const record = await MilkAddition.query().where("id", id).first();
+        return record;
+      } catch (err) {
+        console.log(err);
+
+        if (err.code) return response.internalServerError(err.code);
+
+        return response.internalServerError("Please try again");
+      }
+    } else {
+      return response.unauthorized("Unauthorized");
+    }
+  }
+
+  public async showReductions({ auth, response, params }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    const { id } = params;
+    if (user) {
+      try {
+        const record = await MilkReduction.query().where("id", id).first();
         return record;
       } catch (err) {
         console.log(err);

@@ -21,8 +21,7 @@ export default class CalendarsController {
           startDate && endDate,
           (passQuery) => {
             passQuery
-              .whereBetween('remind_at', [startDate, endDate])
-              .orWhereBetween('created_at', [startDate, endDate])
+              .whereRaw(`MONTH(DATE(remind_at)) = MONTH(DATE('${startDate}'))`)
           }
         )
     } catch (err) {

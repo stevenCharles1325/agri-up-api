@@ -25,7 +25,7 @@ export default class CalendarsController {
           }
         )
         .orderBy('created_at', 'desc')
-        .orderBy('status', 'asc')
+        .orderBy('status', 'desc')
     } catch (err) {
       console.log(err)
       return response.internalServerError(err.code)

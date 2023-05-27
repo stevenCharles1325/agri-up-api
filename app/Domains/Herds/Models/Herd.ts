@@ -1,115 +1,129 @@
-import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, HasOne, belongsTo, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
-import HerdGroup from 'App/Domains/Herds/Models/HerdGroup'
-import User from 'App/Domains/Users/Models/User'
-import Purpose from './Purpose'
-import Remark from './Remark'
-import Breed from './Breed'
-import { string } from '@ioc:Adonis/Core/Helpers'
+import { DateTime } from "luxon";
+import {
+  BaseModel,
+  BelongsTo,
+  HasOne,
+  belongsTo,
+  column,
+  hasOne,
+} from "@ioc:Adonis/Lucid/Orm";
+import HerdGroup from "App/Domains/Herds/Models/HerdGroup";
+import User from "App/Domains/Users/Models/User";
+import Purpose from "./Purpose";
+import Remark from "./Remark";
+import Breed from "./Breed";
+import { string } from "@ioc:Adonis/Core/Helpers";
 
 export default class Herd extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public ownerId: number
+  public ownerId: number;
 
   @hasOne(() => User, {
-    foreignKey: 'ownerId',
+    foreignKey: "ownerId",
   })
-  public owner: HasOne<typeof User>
+  public owner: HasOne<typeof User>;
 
   @column()
-  public tag: string
+  public tag: string;
 
   @column()
-  public type: string
+  public type: string;
 
   @column()
-  public damTag: string
+  public damTag: string;
 
   @belongsTo(() => Herd, {
-    localKey: 'tag',
-    foreignKey: 'damTag',
+    localKey: "tag",
+    foreignKey: "damTag",
   })
-  public dam: BelongsTo<typeof Herd>
+  public dam: BelongsTo<typeof Herd>;
 
   @column()
-  public sireTag: string
+  public sireTag: string;
 
   @belongsTo(() => Herd, {
-    localKey: 'tag',
-    foreignKey: 'sireTag',
+    localKey: "tag",
+    foreignKey: "sireTag",
   })
-  public sire: BelongsTo<typeof Herd>
+  public sire: BelongsTo<typeof Herd>;
 
   @column()
-  public groupId: number
+  public groupId: number;
 
   @hasOne(() => HerdGroup, {
-    foreignKey: 'groupId',
+    foreignKey: "id",
+    localKey: "groupId",
   })
-  public group: HasOne<typeof HerdGroup>
+  public group: HasOne<typeof HerdGroup>;
 
   @column()
-  public purposeId: number
+  public purposeId: number;
 
   @hasOne(() => Purpose, {
-    foreignKey: 'purposeId',
+    foreignKey: "id",
+    localKey: "purposeId",
   })
-  public purpose: HasOne<typeof Purpose>
+  public purpose: HasOne<typeof Purpose>;
 
   @column()
-  public remarkId: number
+  public remarkId: number;
 
   @hasOne(() => Remark, {
-    foreignKey: 'remarkId',
+    foreignKey: "id",
+    localKey: "remarkId",
   })
-  public remark: HasOne<typeof Remark>
+  public remark: HasOne<typeof Remark>;
 
   @column()
-  public breedId: number
+  public breedId: number;
 
   @hasOne(() => Breed, {
-    foreignKey: 'breedId',
+    foreignKey: "id",
+    localKey: "breedId",
   })
-  public breed: HasOne<typeof Breed>
+  public breed: HasOne<typeof Breed>;
 
   @column()
-  public status: string
+  public status: string;
 
   @column()
-  public name: string
-  
+  public name: string;
+
   @column({
     prepare: (value: string) => string.capitalCase(value),
   })
-  public gender: string
+  public gender: string;
 
   @column()
-  public stage: string
+  public stage: string;
 
   @column()
-  public source: string
+  public source: string;
 
   @column()
-  public notes: string
+  public notes: string;
 
   @column()
-  public birthWeight: number
+  public birthWeight: number;
 
   @column()
-  public currentWeight: number
+  public currentWeight: number;
 
   @column.dateTime()
-  public birthDate: DateTime
+  public birthDate: DateTime;
 
   @column.dateTime()
-  public enteredAt: DateTime
+  public enteredAt: DateTime;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
+
+  @column.dateTime()
+  public deletedAt: DateTime | null;
 }

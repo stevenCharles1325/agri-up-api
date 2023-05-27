@@ -1,105 +1,129 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Herd from '../Models/Herd'
-import HerdCreateValidator from '../Validators/HerdCreateValidator'
-import HerdUpdateValidator from '../Validators/HerdUpdateValidator'
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import Herd from "../Models/Herd";
+import HerdCreateValidator from "../Validators/HerdCreateValidator";
+import HerdUpdateValidator from "../Validators/HerdUpdateValidator";
 
 export default class HerdsController {
-  public async index ({ auth, request, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-    const user = auth.use('jwt').user
-    if (!user) return response.unauthorized('Unauthorized')
+  public async index({ auth, request, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    if (!user) return response.unauthorized("Unauthorized");
 
     const {
       group = 0,
-      type = 'swine', 
+      type = "swine",
       tag,
       stage,
       gender,
       remark,
-      order = 'desc',
-    } = request.all()
+      order = "desc",
+    } = request.all();
 
-    const herdQuery = Herd
-      .query()
-      .where({ type })
-      .where({ ownerId: user.id })
-    
-    if (group) herdQuery.has('group')
-    if (stage) herdQuery.where('stage', stage)
-    if (gender) herdQuery.where('gender', gender)
-    if (remark) herdQuery.where('remark', remark)
-    if (tag) herdQuery.where('tag', 'LIKE', `%${tag}%`)
+    const herdQuery = Herd.query().where({ type }).where({ ownerId: user.id });
+
+    if (group) herdQuery.has("group");
+    if (stage) herdQuery.where("stage", stage);
+    if (gender) herdQuery.where("gender", gender);
+    if (remark) herdQuery.where("remark", remark);
+    if (tag) herdQuery.where("tag", "LIKE", `%${tag}%`);
 
     return await herdQuery
-      .orderBy('createdAt', order)
-      .preload('sire')
-      .preload('dam')
+      .orderBy("createdAt", order)
+      .preload("sire")
+      .preload("dam");
   }
 
-  public async store ({ auth, params, request, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-    const { herdType } = params
-    const user = auth.use('jwt').user
-    const payload = await request.validate(HerdCreateValidator)
+  public async store({ auth, params, request, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { herdType } = params;
+    const user = auth.use("jwt").user;
+    const payload = await request.validate(HerdCreateValidator);
 
     try {
-      if (!user) return response.unauthorized('Unauthorized')
-      if (!herdType) return response.badRequest('Invalid Herd Type')
+      if (!user) return response.unauthorized("Unauthorized");
+      if (!herdType) return response.badRequest("Invalid Herd Type");
 
-      const herd = await Herd
-        .query()
+      const herd = await Herd.query()
         .where({
           type: herdType,
           tag: payload.tag,
           ownerId: user.id,
         })
-        .first()
-      
-      if (herd) return response.badRequest('Herd tag already exists')
+        .first();
+
+      if (herd) return response.badRequest("Herd tag already exists");
 
       await Herd.create({
         ...payload,
         ownerId: user.id,
         type: herdType,
-      })
+      });
 
-      return response.created('Successfully Created New Herd')
+      return response.created("Successfully Created New Herd");
     } catch (err) {
-      console.log(err)
+      console.log(err);
 
-      if (err.code) return response.internalServerError(err.code)
+      if (err.code) return response.internalServerError(err.code);
 
-      return response.internalServerError('Please try again')
+      return response.internalServerError("Please try again");
     }
   }
 
-  public async update ({ auth, params, request, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-    const { herdId } = params 
-    const payload = await request.validate(HerdUpdateValidator)
+  public async show({ auth, params, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { herdId } = params;
+
+    const record = await Herd.query()
+      .where("id", herdId)
+      .preload("group")
+      .preload("purpose")
+      .preload("breed")
+      .preload("dam")
+      .preload("sire")
+      .firstOrFail();
+
+    const offSprings = await Herd.query()
+      .where("dam_tag", record.tag)
+      .orWhere("sire_tag", record.tag);
+
+    return response.ok({
+      data: record,
+      offSprings: offSprings,
+    });
+  }
+
+  public async update({
+    auth,
+    params,
+    request,
+    response,
+  }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { herdId } = params;
+    const payload = await request.validate(HerdUpdateValidator);
 
     try {
-      const herd = await Herd.findOrFail(herdId)
-      herd.merge(payload)
+      const herd = await Herd.findOrFail(herdId);
+      herd.merge(payload);
 
-      await herd.save()
-      return response.ok('Successfully Updated Herd')
+      await herd.save();
+      return response.ok("Successfully Updated Herd");
     } catch (err) {
-      console.log(err)
+      console.log(err);
 
-      if (err.code) return response.internalServerError(err.code)
+      if (err.code) return response.internalServerError(err.code);
 
-      return response.internalServerError('Please try again')
+      return response.internalServerError("Please try again");
     }
   }
-  
-  public async delete ({ auth, params, response }: HttpContextContract) {
-    await auth.use('jwt').authenticate()
-    const { herdId } = params
 
-    const herd = await Herd.findOrFail(herdId)
-    herd.delete()
-    
-    return response.ok('Successfully Deleted Herd')
+  public async delete({ auth, params, response }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const { herdId } = params;
+
+    const herd = await Herd.findOrFail(herdId);
+    herd.delete();
+
+    return response.ok("Successfully Deleted Herd");
   }
 }

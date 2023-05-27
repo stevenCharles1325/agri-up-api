@@ -24,6 +24,8 @@ export default class CalendarsController {
               .whereRaw(`DATE(remind_at) = DATE('${startDate}')`)
           }
         )
+        .orderBy('created_at', 'desc')
+        .orderBy('status', 'asc')
     } catch (err) {
       console.log(err)
       return response.internalServerError(err.code)

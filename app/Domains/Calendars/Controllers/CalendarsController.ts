@@ -21,7 +21,7 @@ export default class CalendarsController {
           startDate && endDate,
           (passQuery) => {
             passQuery
-              .whereRaw(`DATE(remind_at)) = DATE('${startDate}'))`)
+              .whereRaw(`DATE(remind_at) = DATE('${startDate}')`)
           }
         )
     } catch (err) {

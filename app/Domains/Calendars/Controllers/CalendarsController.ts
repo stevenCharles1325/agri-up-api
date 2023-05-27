@@ -7,7 +7,10 @@ export default class CalendarsController {
   public async index ({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const user = auth.use('jwt').user
-    const { startDate, endDate } = request.all()
+    const { 
+      startDate, 
+      endDate 
+    } = request.all()
 
     if (!user) return response.unauthorized('Unauthorized')
 
@@ -18,10 +21,11 @@ export default class CalendarsController {
           startDate && endDate,
           (passQuery) => {
             passQuery
-              .whereBetween('remind_at', [startDate, endDate])
-              .orWhereBetween('created_at', [startDate, endDate])
+              .whereRaw(`DATE(remind_at) = DATE('${startDate}')`)
           }
         )
+        .orderBy('created_at', 'desc')
+        .orderBy('status', 'desc')
     } catch (err) {
       console.log(err)
       return response.internalServerError(err.code)

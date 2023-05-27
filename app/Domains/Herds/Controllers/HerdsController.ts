@@ -6,6 +6,40 @@ import { DateTime } from "luxon";
 import Remark from "../Models/Remark";
 
 export default class HerdsController {
+  public async getList({
+    auth,
+    response,
+    params,
+    request,
+  }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    const { herdType } = params;
+    const search = request.input("search");
+
+    if (!user) return response.unauthorized("Unauthorized");
+
+    try {
+      const query = Herd.query()
+        .where("type", herdType)
+        .where("owner_id", user.id)
+        .whereNull("deleted_at");
+
+      if (search) {
+        query
+          .where("tag", "like", `%${search.toLowerCase().trim()}%`)
+          .orWhere("name", "like", `%${search.toLowerCase().trim()}%`);
+      }
+
+      const milks = await query.orderBy("createdAt", "desc");
+      return response.ok(milks);
+    } catch (err) {
+      console.log(err);
+
+      return response.internalServerError("Please try again");
+    }
+  }
+
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;

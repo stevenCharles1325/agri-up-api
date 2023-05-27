@@ -10,3 +10,9 @@ Route.group(() => {
 })
   .prefix("/herds")
   .namespace("App/Domains/Herds/Controllers");
+
+Route.group(() => {
+  Route.get("/:herdType", "HerdsController.getList");
+})
+  .prefix("/herds-list")
+  .namespace("App/Domains/Herds/Controllers");

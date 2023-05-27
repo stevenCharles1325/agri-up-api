@@ -15,10 +15,12 @@ export default class HerdCreateValidator {
     sireTag: schema.string.optional([
       rules.exists({ table: "herds", column: "tag" }),
     ]),
-    groupId: schema.number([
+    groupId: schema.number.optional([
       rules.exists({ table: "herd_groups", column: "id" }),
     ]),
-    breedId: schema.number([rules.exists({ table: "breeds", column: "id" })]),
+    breedId: schema.number.optional([
+      rules.exists({ table: "breeds", column: "id" }),
+    ]),
     purposeId: schema.number([
       rules.exists({ table: "purposes", column: "id" }),
     ]),
@@ -31,7 +33,7 @@ export default class HerdCreateValidator {
       "deceased",
       "culled",
     ] as const),
-    name: schema.string({}, [rules.minLength(2)]),
+    name: schema.string.optional({}, [rules.minLength(2)]),
     gender: schema.enum(["male", "female"] as const),
     stage: schema.string(),
     source: schema.string.optional(),

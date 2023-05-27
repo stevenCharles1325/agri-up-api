@@ -2,6 +2,8 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Herd from "../Models/Herd";
 import HerdCreateValidator from "../Validators/HerdCreateValidator";
 import HerdUpdateValidator from "../Validators/HerdUpdateValidator";
+import { DateTime } from "luxon";
+import Remark from "../Models/Remark";
 
 export default class HerdsController {
   public async index({ auth, request, response }: HttpContextContract) {
@@ -82,6 +84,8 @@ export default class HerdsController {
       .preload("sire")
       .firstOrFail();
 
+    const remark = await Remark.query().where("herd_id", record.id).first();
+
     const offSprings = await Herd.query()
       .where("dam_tag", record.tag)
       .orWhere("sire_tag", record.tag);
@@ -89,6 +93,7 @@ export default class HerdsController {
     return response.ok({
       data: record,
       offSprings: offSprings,
+      remark: remark,
     });
   }
 
@@ -117,12 +122,18 @@ export default class HerdsController {
     }
   }
 
-  public async delete({ auth, params, response }: HttpContextContract) {
+  public async destroy({ auth, params, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
-    const { herdId } = params;
+    const { herdId, actionType } = params;
 
-    const herd = await Herd.findOrFail(herdId);
-    herd.delete();
+    if (actionType === "archive") {
+      const record = await Herd.findOrFail(herdId);
+      record.deletedAt = DateTime.now();
+      await record.save();
+    } else {
+      const record = await Herd.findOrFail(herdId);
+      record.delete();
+    }
 
     return response.ok("Successfully Deleted Herd");
   }

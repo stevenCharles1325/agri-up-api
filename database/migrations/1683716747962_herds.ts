@@ -49,7 +49,15 @@ export default class extends BaseSchema {
         .references("remarks.id")
         .onDelete("CASCADE");
 
-      table.enum("status", ["pregnant", "non-lactating", "deceased", "culled"]);
+      table
+        .enum("status", [
+          "sold",
+          "pregnant",
+          "non-lactating",
+          "deceased",
+          "culled",
+        ])
+        .defaultTo(null);
       table.enum("gender", ["Male", "Female"]).notNullable().defaultTo("Male");
 
       table.string("stage");

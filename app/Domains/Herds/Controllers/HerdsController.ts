@@ -100,6 +100,7 @@ export default class HerdsController {
     const remark = await Remark.query().where("herd_id", record.id).first();
 
     const offSprings = await Herd.query()
+      .whereNot("id", record.id)
       .where("dam_tag", record.tag)
       .orWhere("sire_tag", record.tag);
 

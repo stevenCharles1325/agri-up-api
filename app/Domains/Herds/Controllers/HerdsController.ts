@@ -45,6 +45,19 @@ export default class HerdsController {
       if (!user) return response.unauthorized("Unauthorized");
       if (!herdType) return response.badRequest("Invalid Herd Type");
 
+      const isDuplicate = await Herd.query()
+        .where("name", payload.name)
+        .andWhere("type", herdType)
+        .andWhere("owner_id", user.id)
+        .first();
+
+      if (isDuplicate) {
+        return response.status(400).json({
+          status: 400,
+          message: "This Herd already exist in your farm.",
+        });
+      }
+
       const herd = await Herd.query()
         .where({
           type: herdType,
@@ -104,11 +117,29 @@ export default class HerdsController {
     response,
   }: HttpContextContract) {
     await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
     const { herdId } = params;
     const payload = await request.validate(HerdUpdateValidator);
 
     try {
+      if (!user) return response.unauthorized("Unauthorized");
+
       const herd = await Herd.findOrFail(herdId);
+
+      const isDuplicate = await Herd.query()
+        .whereNot("id", herdId)
+        .where("name", payload.name)
+        .andWhere("type", herd.type)
+        .andWhere("owner_id", user.id)
+        .first();
+
+      if (isDuplicate) {
+        return response.status(400).json({
+          status: 400,
+          message: "This Herd already exist.",
+        });
+      }
+
       herd.merge(payload);
 
       await herd.save();

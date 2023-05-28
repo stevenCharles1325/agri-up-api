@@ -2,6 +2,7 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Expense from "../Models/Expense";
 import CreateExpenseValidator from "../Validators/CreateExpenseValidator";
 import UpdateExpenseValidator from "../Validators/UpdateExpenseValidator";
+import { DateTime } from "luxon";
 
 export default class ExpensesController {
   public async index({ auth, response }: HttpContextContract) {
@@ -69,11 +70,19 @@ export default class ExpensesController {
 
   public async destroy({ auth, params, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
-    const { expenseId } = params;
+    const { expenseId, actionType } = params;
 
-    const expense = await Expense.findOrFail(expenseId);
     try {
-      await expense.delete();
+      if (actionType === "archive") {
+        const record = await Expense.findOrFail(expenseId);
+
+        record.deletedAt = DateTime.now();
+        await record.save();
+      } else {
+        const record = await Expense.findOrFail(expenseId);
+
+        record.delete();
+      }
 
       return response.ok("Successfully Deleted");
     } catch (err) {

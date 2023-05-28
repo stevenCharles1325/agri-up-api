@@ -2,6 +2,7 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Income from "../Models/Income";
 import CreateIncomeValidator from "../Validators/CreateIncomeValidator";
 import UpdateIncomeValidator from "../Validators/UpdateIncomeValidator";
+import { DateTime } from "luxon";
 
 export default class IncomesController {
   public async index({ auth, response, request }: HttpContextContract) {
@@ -113,11 +114,19 @@ export default class IncomesController {
 
   public async destroy({ auth, params, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
-    const { incomeId } = params;
+    const { incomeId, actionType } = params;
 
-    const income = await Income.findOrFail(incomeId);
     try {
-      await income.delete();
+      if (actionType === "archive") {
+        const record = await Income.findOrFail(incomeId);
+
+        record.deletedAt = DateTime.now();
+        await record.save();
+      } else {
+        const record = await Income.findOrFail(incomeId);
+
+        record.delete();
+      }
 
       return response.ok("Successfully Deleted");
     } catch (err) {

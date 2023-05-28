@@ -6,7 +6,7 @@ Route.group(() => {
 
   Route.post("/", "ExpensesController.store");
   Route.put("/:expenseId", "ExpensesController.update");
-  Route.delete("/:expenseId", "ExpensesController.destroy");
+  Route.delete("/:expenseId/:actionType", "ExpensesController.destroy");
 })
   .prefix("/expenses")
   .namespace("App/Domains/Expenses/Controllers");

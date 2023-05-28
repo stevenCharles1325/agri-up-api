@@ -335,10 +335,18 @@ export default class FeedsController {
     response,
   }: HttpContextContract) {
     await auth.use("jwt").authenticate();
-    const { id } = params;
+    const { id, actionType } = params;
 
-    const feedRecord = await FeedRecord.findOrFail(id);
-    await feedRecord.delete();
+    if (actionType === "archive") {
+      const record = await FeedRecord.findOrFail(id);
+
+      record.deletedAt = DateTime.now();
+      await record.save();
+    } else {
+      const record = await FeedRecord.findOrFail(id);
+
+      record.delete();
+    }
 
     return response.ok("Successfully Deleted Feed");
   }

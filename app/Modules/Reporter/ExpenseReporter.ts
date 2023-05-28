@@ -67,7 +67,7 @@ export default class ExpenseReporter {
     return (await expense)?.[0]
   }
 
-  public static async sale (selectedHistory: IHistoryOption) {
+  public static async type (selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let expense: any
 

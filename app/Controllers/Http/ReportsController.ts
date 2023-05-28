@@ -28,7 +28,7 @@ export default class ReportsController {
   
       const expenseHistory = await ExpenseReporter.history(cleansedDateFilter)
       const expenseTotal = await ExpenseReporter.total(cleansedDateFilter)
-      const expenseSale = await ExpenseReporter.sale(cleansedDateFilter)
+      const expenseType = await ExpenseReporter.type(cleansedDateFilter)
   
       const income = {
         history: incomeHistory,
@@ -39,7 +39,7 @@ export default class ReportsController {
       const expense = {
         history: expenseHistory,
         total: expenseTotal,
-        sale: expenseSale,
+        type: expenseType,
       }
   
       return response.ok({

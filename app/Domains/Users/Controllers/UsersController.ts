@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from '../Models/User'
+import Herd from 'App/Domains/Herds/Models/Herd'
 import UserUpdateValidator from '../Validators/UserUpdateValidator'
 
 export default class UsersController {
@@ -11,15 +12,18 @@ export default class UsersController {
 
     try {
       const userQuery = User.query().where({ id })
-      const cattleCount = await userQuery.withCount('herds').where('herds.type', '=', 'cattle')
-      const swineCount = await userQuery.withCount('herds').where('herds.type', '=', 'swine')
-      const goatCount = await userQuery.withCount('herds').where('herds.type', '=', 'goat')
+      const herdsQuery = Herd.query().where({ ownerId: id })
+
+      const cattleCount = await herdsQuery.where('type', '=', 'cattle').count('* AS total_cattle')
+      const swineCount = await herdsQuery.where('type', '=', 'swine').count('* AS total_swine')
+      const goatCount = await herdsQuery.where('type', '=', 'goat').count('* AS total_goat')
 
       // To Add: Community Posts
       const user = await userQuery.firstOrFail()
-      user.cattleCount = cattleCount[0].$extras.herds_count
-      user.swineCount = swineCount[0].$extras.herds_count
-      user.goatCount = goatCount[0].$extras.herds_count
+
+      user.cattleCount = cattleCount[0].$extras.total_cattle
+      user.swineCount = swineCount[0].$extras.total_swine
+      user.goatCount = goatCount[0].$extras.total_goat
 
       return response.ok(user)
     } catch (err) {

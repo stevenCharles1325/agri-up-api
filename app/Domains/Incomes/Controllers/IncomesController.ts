@@ -11,7 +11,9 @@ export default class IncomesController {
     if (!user) return response.unauthorized("Unauthorized");
     const search = request.input("search");
 
-    const incomeQuery = Income.query().where("ownerId", user.id);
+    const incomeQuery = Income.query()
+      .where("ownerId", user.id)
+      .whereNull("deleted_at");
 
     if (search) {
       incomeQuery

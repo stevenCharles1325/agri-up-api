@@ -194,6 +194,7 @@ export default class FeedsController {
       try {
         const feedQuery = FeedRecord.query()
           .where("herd_type", herdType)
+          .whereNull("deleted_at")
           .andWhere("owner_id", user.id)
           .preload("feedName");
 

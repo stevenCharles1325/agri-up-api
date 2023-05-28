@@ -6,6 +6,7 @@ import FeedReduceCreateValidator from "../Validators/FeedReduceCreateValidator";
 import FeedUpdateValidator from "../Validators/FeedUpdateValidator";
 import FeedRecordCreateValidator from "../Validators/FeedRecordCreateValidator";
 import FeedRecord from "../Models/FeedRecord";
+import { DateTime } from "luxon";
 
 export default class FeedsController {
   public async currentStocks({ auth, request, response }: HttpContextContract) {
@@ -36,14 +37,25 @@ export default class FeedsController {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
     const { herdType = "cattle" } = request.all();
+    const search = request.input("search");
 
     if (user) {
       try {
-        const feeds = await Feed.query()
+        const feedQuery = Feed.query()
           .where("herd_type", herdType)
-          .andWhere("owner_id", user.id)
-          .preload("feedName")
-          .orderBy("created_at", "desc");
+          .where("owner_id", user.id)
+          .whereNull("deleted_at")
+          .preload("feedName");
+
+        if (search) {
+          feedQuery
+            .where("notes", "like", `%${search.toLowerCase().trim()}%`)
+            .orWhere("quantity", "like", `%${search.toLowerCase().trim()}%`)
+            .orWhere("source", "like", `%${search.toLowerCase().trim()}%`)
+            .orWhere("reason", "like", `%${search.toLowerCase().trim()}%`);
+        }
+
+        const feeds = await feedQuery.orderBy("created_at", "desc");
         return feeds;
       } catch (err) {
         console.log(err);
@@ -256,12 +268,39 @@ export default class FeedsController {
       return response.unauthorized("Unauthorized");
     }
   }
+
   public async deleteAddFeed({ auth, params, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
-    const { feedId } = params;
+    const { feedId, actionType, type } = params;
 
-    const feed = await Feed.findOrFail(feedId);
-    feed.delete();
+    if (actionType === "archive") {
+      const record = await Feed.findOrFail(feedId);
+
+      if (type === "addition") {
+        const feedName = await FeedName.findOrFail(record.feedNameId);
+        feedName.quantity = feedName.quantity - record.quantity;
+        await feedName.save();
+      } else {
+        const feedName = await FeedName.findOrFail(record.feedNameId);
+        feedName.quantity = feedName.quantity + record.quantity;
+        await feedName.save();
+      }
+
+      record.deletedAt = DateTime.now();
+      await record.save();
+    } else {
+      const record = await Feed.findOrFail(feedId);
+      if (type === "addition") {
+        const feedName = await FeedName.findOrFail(record.feedNameId);
+        feedName.quantity = feedName.quantity - record.quantity;
+        await feedName.save();
+      } else {
+        const feedName = await FeedName.findOrFail(record.feedNameId);
+        feedName.quantity = feedName.quantity + record.quantity;
+        await feedName.save();
+      }
+      record.delete();
+    }
 
     return response.ok("Successfully Deleted Feed");
   }

@@ -4,17 +4,20 @@ import CreateIncomeValidator from "../Validators/CreateIncomeValidator";
 import UpdateIncomeValidator from "../Validators/UpdateIncomeValidator";
 
 export default class IncomesController {
-  public async index({ auth, response }: HttpContextContract) {
+  public async index({ auth, response, request }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
     if (!user) return response.unauthorized("Unauthorized");
+    const search = request.input("search");
 
-    // const { searchText } = request.all();
+    const incomeQuery = Income.query().where("ownerId", user.id);
 
-    const incomes = await Income.query()
-      .where("ownerId", user.id)
-      // .where("notes", "LIKE", `%${searchText}%`)
-      .orderBy("created_at", "desc");
+    if (search) {
+      incomeQuery
+        .where("notes", "like", `%${search.toLowerCase().trim()}%`)
+        .orWhere("type", "like", `%${search.toLowerCase().trim()}%`);
+    }
+    const incomes = await incomeQuery.orderBy("created_at", "desc");
 
     return response.ok(incomes);
   }

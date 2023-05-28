@@ -28,3 +28,9 @@ Route.group(() => {
 })
   .prefix("/milk-reductions")
   .namespace("App/Domains/MilkInventories/Controllers");
+
+Route.group(() => {
+  Route.get("/:herdType", "MilkInventoriesController.getStocks");
+})
+  .prefix("/milk-stocks")
+  .namespace("App/Domains/MilkInventories/Controllers");

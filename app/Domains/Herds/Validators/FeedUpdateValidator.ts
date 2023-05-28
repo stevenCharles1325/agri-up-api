@@ -16,6 +16,7 @@ export default class FeedUpdateValidator {
     quantity: schema.number.optional([rules.range(1, 10000000000000)]),
     totalAmount: schema.number.optional([rules.range(1, 10000000000000)]),
     notes: schema.string.optional([rules.minLength(5)]),
+    reason: schema.enum(["spoilt", "lost", "consumed", "others"] as const),
   });
 
   public messages: CustomMessages = {

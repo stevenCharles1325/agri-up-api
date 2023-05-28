@@ -11,18 +11,14 @@ export default class HerdUpdateValidator {
     sireTag: schema.string.optional({ trim: true }, [
       rules.exists({ table: "herds", column: "tag" }),
     ]),
-    groupId: schema.number.optional([
-      rules.exists({ table: "herd_groups", column: "id" }),
-    ]),
+    groupId: schema.number.optional(),
     purposeId: schema.number.optional([
       rules.exists({ table: "purposes", column: "id" }),
     ]),
     remarkId: schema.number.optional([
       rules.exists({ table: "remarks", column: "id" }),
     ]),
-    breedId: schema.number.optional([
-      rules.exists({ table: "breeds", column: "id" }),
-    ]),
+    breedId: schema.number.optional(),
     status: schema.enum.optional([
       "pregnant",
       "non-lactating",

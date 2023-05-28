@@ -4,6 +4,8 @@ import HerdCreateValidator from "../Validators/HerdCreateValidator";
 import HerdUpdateValidator from "../Validators/HerdUpdateValidator";
 import { DateTime } from "luxon";
 import Remark from "../Models/Remark";
+import HerdGroup from "../Models/HerdGroup";
+import Breed from "../Models/Breed";
 
 export default class HerdsController {
   public async getList({
@@ -16,6 +18,9 @@ export default class HerdsController {
     const user = auth.use("jwt").user;
     const { herdType } = params;
     const search = request.input("search");
+    const groupId = request.input("group_id");
+    const stage = request.input("stage");
+    const status = request.input("status");
 
     if (!user) return response.unauthorized("Unauthorized");
 
@@ -29,6 +34,22 @@ export default class HerdsController {
         query
           .where("tag", "like", `%${search.toLowerCase().trim()}%`)
           .orWhere("name", "like", `%${search.toLowerCase().trim()}%`);
+      }
+
+      if (groupId) {
+        if (groupId === "group") {
+          query.whereNotNull("group_id");
+        } else {
+          query.whereNull("group_id");
+        }
+      }
+
+      if (stage) {
+        query.where("stage", stage);
+      }
+
+      if (status) {
+        query.where("status", status);
       }
 
       const milks = await query.orderBy("createdAt", "desc");
@@ -80,7 +101,7 @@ export default class HerdsController {
       if (!herdType) return response.badRequest("Invalid Herd Type");
 
       const isDuplicate = await Herd.query()
-        .where("name", payload.name)
+        .where("tag", payload.tag)
         .andWhere("type", herdType)
         .andWhere("owner_id", user.id)
         .first();
@@ -124,9 +145,7 @@ export default class HerdsController {
 
     const record = await Herd.query()
       .where("id", herdId)
-      .preload("group")
       .preload("purpose")
-      .preload("breed")
       .preload("dam")
       .preload("sire")
       .firstOrFail();
@@ -138,10 +157,21 @@ export default class HerdsController {
       .where("dam_tag", record.tag)
       .orWhere("sire_tag", record.tag);
 
+    let group: any = null;
+    if (record?.groupId) {
+      group = await HerdGroup.query().where("id", record?.groupId).first();
+    }
+    let breed: any = null;
+    if (record?.breedId) {
+      breed = await Breed.query().where("id", record?.breedId).first();
+    }
+
     return response.ok({
       data: record,
       offSprings: offSprings,
       remark: remark,
+      group: group,
+      breed: breed,
     });
   }
 
@@ -163,7 +193,7 @@ export default class HerdsController {
 
       const isDuplicate = await Herd.query()
         .whereNot("id", herdId)
-        .where("name", payload.name)
+        .where("tag", herd.tag)
         .andWhere("type", herd.type)
         .andWhere("owner_id", user.id)
         .first();
@@ -175,7 +205,11 @@ export default class HerdsController {
         });
       }
 
-      herd.merge(payload);
+      herd.merge({
+        ...payload,
+        groupId: payload.groupId === 0 ? null : payload.groupId,
+        breedId: payload.breedId === 0 ? null : payload.breedId,
+      });
 
       await herd.save();
       return response.ok("Successfully Updated Herd");

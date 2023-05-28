@@ -2,20 +2,30 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Expense from "../Models/Expense";
 import CreateExpenseValidator from "../Validators/CreateExpenseValidator";
 import UpdateExpenseValidator from "../Validators/UpdateExpenseValidator";
+import { DateTime } from "luxon";
 
 export default class ExpensesController {
-  public async index({ auth, response }: HttpContextContract) {
+  public async index({ auth, response, request }: HttpContextContract) {
     await auth.use("jwt").authenticate();
+    const search = request.input("search");
     // const { notes = "", amountOrder = "asc" } = request.all();
     const user = auth.use("jwt").user;
     if (!user) return response.unauthorized("Unauthorized");
 
-    const expenses = await Expense.query()
+    const expenseQuery = Expense.query()
       .where("ownerId", user.id)
-      // .if(notes, (passedQuery) =>
-      //   passedQuery.where("notes", "LIKE", `%${notes}%`)
-      // )
-      .orderBy("created_at", "desc");
+      .whereNull("deleted_at");
+    // .if(notes, (passedQuery) =>
+    //   passedQuery.where("notes", "LIKE", `%${notes}%`)
+    // )
+
+    if (search) {
+      expenseQuery
+        .where("notes", "like", `%${search.toLowerCase().trim()}%`)
+        .orWhere("type", "like", `%${search.toLowerCase().trim()}%`);
+    }
+
+    const expenses = await expenseQuery.orderBy("created_at", "desc");
 
     return response.ok(expenses);
   }
@@ -69,11 +79,19 @@ export default class ExpensesController {
 
   public async destroy({ auth, params, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
-    const { expenseId } = params;
+    const { expenseId, actionType } = params;
 
-    const expense = await Expense.findOrFail(expenseId);
     try {
-      await expense.delete();
+      if (actionType === "archive") {
+        const record = await Expense.findOrFail(expenseId);
+
+        record.deletedAt = DateTime.now();
+        await record.save();
+      } else {
+        const record = await Expense.findOrFail(expenseId);
+
+        record.delete();
+      }
 
       return response.ok("Successfully Deleted");
     } catch (err) {

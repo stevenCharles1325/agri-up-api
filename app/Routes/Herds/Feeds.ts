@@ -6,7 +6,7 @@ Route.group(() => {
   Route.get("/stocks/current-stocks", "FeedsController.currentStocks");
   Route.post("/:herdType", "FeedsController.add");
   Route.put("/:feedId", "FeedsController.updateFeedStock");
-  Route.delete("/:feedId", "FeedsController.deleteAddFeed");
+  Route.delete("/:feedId/:actionType/:type", "FeedsController.deleteAddFeed");
 })
   .prefix("/feeds")
   .namespace("App/Domains/Herds/Controllers");
@@ -21,7 +21,7 @@ Route.group(() => {
   Route.get("/", "FeedsController.feedRecordIndex");
   Route.get("/:id", "FeedsController.feedRecordShow");
   Route.post("/:herdType", "FeedsController.feedRecord");
-  Route.delete("/:id", "FeedsController.deleteFeedRecord");
+  Route.delete("/:id/:actionType", "FeedsController.deleteFeedRecord");
 })
   .prefix("/feeds-records")
   .namespace("App/Domains/Herds/Controllers");

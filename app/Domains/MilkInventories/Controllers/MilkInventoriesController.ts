@@ -5,6 +5,39 @@ import { DateTime } from "luxon";
 import MilkReduction from "../Models/MilkReduction";
 
 export default class MilkInventoriesController {
+  public async getStocks({ auth, response, params }: HttpContextContract) {
+    await auth.use("jwt").authenticate();
+    const user = auth.use("jwt").user;
+    const { herdType } = params;
+
+    if (!user) return response.unauthorized("Unauthorized");
+
+    try {
+      const milkAdditions = await MilkAddition.query()
+        .sum("quantity as totalAdditions")
+        .where("herd_type", herdType)
+        .where("ownerId", user.id)
+        .whereNull("deleted_at")
+        .first();
+
+      const milkReductions = await MilkReduction.query()
+        .sum("quantity as totalReductions")
+        .where("herd_type", herdType)
+        .where("ownerId", user.id)
+        .whereNull("deleted_at")
+        .first();
+
+      return response.ok({
+        milkAdditions: milkAdditions?.$extras?.totalAdditions,
+        milkReductions: milkReductions?.$extras?.totalReductions,
+      });
+    } catch (err) {
+      console.log(err);
+
+      return response.internalServerError("Please try again");
+    }
+  }
+
   public async index({ auth, response, params, request }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;

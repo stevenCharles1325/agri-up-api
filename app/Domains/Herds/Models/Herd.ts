@@ -51,7 +51,7 @@ export default class Herd extends BaseModel {
   public sire: BelongsTo<typeof Herd>;
 
   @column()
-  public groupId: number;
+  public groupId: number | null;
 
   @hasOne(() => HerdGroup, {
     foreignKey: "id",
@@ -78,7 +78,7 @@ export default class Herd extends BaseModel {
   public remark: HasOne<typeof Remark>;
 
   @column()
-  public breedId: number;
+  public breedId: number | null;
 
   @hasOne(() => Breed, {
     foreignKey: "id",

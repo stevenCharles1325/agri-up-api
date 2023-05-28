@@ -205,7 +205,11 @@ export default class HerdsController {
         });
       }
 
-      herd.merge(payload);
+      herd.merge({
+        ...payload,
+        groupId: payload.groupId === 0 ? null : payload.groupId,
+        breedId: payload.breedId === 0 ? null : payload.breedId,
+      });
 
       await herd.save();
       return response.ok("Successfully Updated Herd");

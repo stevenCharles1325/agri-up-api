@@ -188,14 +188,24 @@ export default class FeedsController {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
     const { herdType = "cattle" } = request.all();
+    const search = request.input("search");
 
     if (user) {
       try {
-        const feeds = await FeedRecord.query()
+        const feedQuery = FeedRecord.query()
           .where("herd_type", herdType)
           .andWhere("owner_id", user.id)
-          .preload("feedName")
-          .orderBy("created_at", "desc");
+          .preload("feedName");
+
+        if (search) {
+          feedQuery.where(
+            "consumer",
+            "like",
+            `%${search.toLowerCase().trim()}%`
+          );
+        }
+
+        const feeds = await feedQuery.orderBy("created_at", "desc");
         return feeds;
       } catch (err) {
         console.log(err);

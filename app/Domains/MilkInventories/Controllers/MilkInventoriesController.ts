@@ -16,14 +16,14 @@ export default class MilkInventoriesController {
       const milkAdditions = await MilkAddition.query()
         .sum("quantity as totalAdditions")
         .where("herd_type", herdType)
-        .where("ownerId", user.id)
+        .where("owner_id", user.id)
         .whereNull("deleted_at")
         .first();
 
       const milkReductions = await MilkReduction.query()
         .sum("quantity as totalReductions")
         .where("herd_type", herdType)
-        .where("ownerId", user.id)
+        .where("owner_id", user.id)
         .whereNull("deleted_at")
         .first();
 
@@ -50,7 +50,7 @@ export default class MilkInventoriesController {
       if (type === "additions") {
         const query = MilkAddition.query()
           .where("herd_type", herdType)
-          .where("ownerId", user.id)
+          .where("owner_id", user.id)
           .whereNull("deleted_at");
 
         if (search) {
@@ -62,7 +62,7 @@ export default class MilkInventoriesController {
       } else if (type === "reductions") {
         const query = MilkReduction.query()
           .where("herd_type", herdType)
-          .where("ownerId", user.id)
+          .where("owner_id", user.id)
           .whereNull("deleted_at");
 
         if (search) {
@@ -91,14 +91,14 @@ export default class MilkInventoriesController {
       if (type === "additions") {
         await MilkAddition.create({
           ...payload,
-          ownerId: user.id,
+          owner_id: user.id,
           herdType: herdType,
         });
         return response.ok("Successfully Added Milk");
       } else if (type === "reductions") {
         await MilkReduction.create({
           ...payload,
-          ownerId: user.id,
+          owner_id: user.id,
           herdType: herdType,
         });
         return response.ok("Successfully Reduced Milk");

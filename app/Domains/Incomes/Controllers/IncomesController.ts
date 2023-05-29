@@ -12,7 +12,7 @@ export default class IncomesController {
     const search = request.input("search");
 
     const incomeQuery = Income.query()
-      .where("ownerId", user.id)
+      .where("owner_id", user.id)
       .whereNull("deleted_at");
 
     if (search) {

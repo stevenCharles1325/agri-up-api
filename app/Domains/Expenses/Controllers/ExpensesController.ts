@@ -13,7 +13,7 @@ export default class ExpensesController {
     if (!user) return response.unauthorized("Unauthorized");
 
     const expenseQuery = Expense.query()
-      .where("ownerId", user.id)
+      .where("owner_id", user.id)
       .whereNull("deleted_at");
     // .if(notes, (passedQuery) =>
     //   passedQuery.where("notes", "LIKE", `%${notes}%`)

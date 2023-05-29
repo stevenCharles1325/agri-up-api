@@ -24,7 +24,7 @@ export default class extends BaseSchema {
        */
       table.timestamp("created_at", { useTz: true }).defaultTo(this.now());
       table.timestamp("updated_at", { useTz: true }).defaultTo(this.now());
-      table.timestamp("deleted_at", { useTz: true }).defaultTo(null);
+      table.timestamp("deleted_at", { useTz: true }).nullable().defaultTo(null);
     });
   }
 

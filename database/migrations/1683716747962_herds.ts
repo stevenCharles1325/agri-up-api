@@ -70,7 +70,7 @@ export default class extends BaseSchema {
 
       table.timestamp("birth_date").notNullable().defaultTo(this.now());
       table.timestamp("entered_at").notNullable().defaultTo(this.now());
-      table.unique(["tag", "type"]);
+      table.unique(["owner_id", "tag", "type"]);
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

@@ -91,14 +91,14 @@ export default class MilkInventoriesController {
       if (type === "additions") {
         await MilkAddition.create({
           ...payload,
-          owner_id: user.id,
+          ownerId: user.id,
           herdType: herdType,
         });
         return response.ok("Successfully Added Milk");
       } else if (type === "reductions") {
         await MilkReduction.create({
           ...payload,
-          owner_id: user.id,
+          ownerId: user.id,
           herdType: herdType,
         });
         return response.ok("Successfully Reduced Milk");

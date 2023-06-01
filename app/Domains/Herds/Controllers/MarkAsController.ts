@@ -2,6 +2,7 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import MarkAsValidator from "../Validators/MarkAsValidator";
 import Herd from "../Models/Herd";
 import Remark from "../Models/Remark";
+import Income from "App/Domains/Incomes/Models/Income";
 
 export default class MarkAsController {
   public async update({
@@ -32,6 +33,26 @@ export default class MarkAsController {
         herdType,
         ownerId: user.id,
       });
+
+      
+      if (payload.status === "sold") {
+        const salesType = {
+          cattle: "Cattle Sale",
+          swine: "Swine Sale",
+          goat: "Goat Sale",
+        }
+
+        const income = {
+          type: salesType[herd.type.toLowerCase()],
+          tag: herd.tag,
+          quantity: '1',
+          amount: payload.amount,
+          date: payload.date,
+          notes: payload.notes,
+        }
+
+        await Income.create(income);
+      }
 
       return response.ok("Successfully Added");
     } catch (err) {

@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import FarmEvent from '../Models/FarmEvent'
 import FarmEventCreateValidator from '../Validators/FarmEventCreateValidator'
 import FarmEventUpdateValidator from '../Validators/FarmEventUpdateValidator'
+import Expense from 'App/Domains/Expenses/Models/Expense'
 
 export default class FarmEventsController {
   public async index({ auth, request, response }: HttpContextContract) {
@@ -46,6 +47,23 @@ export default class FarmEventsController {
         ...payload,
         ownerId: user.id
       })
+
+      if (payload.others?.length) {
+        const others = JSON.parse(payload.others);
+
+        if (others.expenses?.length) {
+          const expense = {
+            type: "Others",
+            herdType: payload.herdType,
+            tag: payload.herdTag,
+            amount: Number(others?.expenses ?? "0") ?? 0,
+            notes: others?.diagnosis ?? "",
+          }
+
+          await Expense.create(expense);
+        }
+      }
+
       return response.created('Successfully created an Event')
     } catch (err) {
       console.log(err)

@@ -7,6 +7,7 @@ import FeedUpdateValidator from "../Validators/FeedUpdateValidator";
 import FeedRecordCreateValidator from "../Validators/FeedRecordCreateValidator";
 import FeedRecord from "../Models/FeedRecord";
 import { DateTime } from "luxon";
+import Expense from "App/Domains/Expenses/Models/Expense";
 
 export default class FeedsController {
   public async currentStocks({ auth, request, response }: HttpContextContract) {
@@ -107,6 +108,18 @@ export default class FeedsController {
       });
       feedName.quantity = feedName.quantity + payload.quantity;
       await feedName.save();
+
+      if (payload.source === "bought") {
+        const expense = {
+          type: "Others",
+          herdType,
+          date: payload.date,
+          amount: payload.totalAmount,
+          notes: payload.notes,
+        }
+
+        await Expense.create(expense);
+      }
 
       return response.ok("Successfully Added Feed");
     } catch (err) {

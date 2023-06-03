@@ -43,7 +43,8 @@ export default class AuthenticationController {
       } catch (err) {
         console.log(err)
 
-        if (err.code) return response.internalServerError(err.code)
+        if (err.code === 'E_INVALID_AUTH_PASSWORD' || err.code === 'E_INVALID_AUTH_UID') 
+          return response.unauthorized("Incorrect email or password")
 
         return response.internalServerError(err)
       }

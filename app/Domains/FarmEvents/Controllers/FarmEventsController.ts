@@ -54,7 +54,7 @@ export default class FarmEventsController {
         if (others.expenses?.length) {
           const expense = {
             type: "Others",
-            herdsType: payload.herdType,
+            herds_type: payload.herdType,
             tag: payload.herdTag,
             amount: Number(others?.expenses ?? "0") ?? 0,
             notes: others?.diagnosis ?? "",

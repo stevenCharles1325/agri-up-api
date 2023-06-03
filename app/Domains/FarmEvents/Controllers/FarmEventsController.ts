@@ -54,6 +54,7 @@ export default class FarmEventsController {
         if (others.expenses?.length) {
           console.log(others);
           const expense = {
+            ownerId: user.id,
             type: "Others",
             herds_type: payload.herdType,
             tag: payload.herdTag,

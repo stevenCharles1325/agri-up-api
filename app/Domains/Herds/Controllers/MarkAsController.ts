@@ -43,6 +43,7 @@ export default class MarkAsController {
         }
 
         const income = {
+          ownerId: user.id,
           type: salesType[herd.type.toLowerCase()],
           tag: herd.tag,
           quantity: '1',

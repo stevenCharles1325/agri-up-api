@@ -30,19 +30,19 @@ export default class FarmEventsController {
 
     switch (timeFrame) {
       case 'past-events':
-        farmEventsQuery.whereRaw(`DATE(remind_at) < DATE(NOW())`)
+        farmEventsQuery.whereRaw(`DATE(start_at) < DATE(NOW())`)
         break;
         
       case 'current-events':
-        farmEventsQuery.whereRaw(`DATE(remind_at) = DATE(NOW())`)
+        farmEventsQuery.whereRaw(`DATE(start_at) = DATE(NOW())`)
         break;
 
       case 'future-events':
-        farmEventsQuery.whereRaw(`DATE(remind_at) > DATE(NOW())`)
+        farmEventsQuery.whereRaw(`DATE(start_at) > DATE(NOW())`)
         break;
 
       default:
-        farmEventsQuery.whereRaw(`DATE(remind_at) = DATE(NOW())`)
+        farmEventsQuery.whereRaw(`DATE(start_at) = DATE(NOW())`)
         break;
     }
 

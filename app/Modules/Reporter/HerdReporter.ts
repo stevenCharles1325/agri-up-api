@@ -2,7 +2,7 @@ import { IHistoryOption } from "App/Interfaces/IHistoryOption";
 import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class HerdReporter {
-  public static async byStage (selectedHistory: IHistoryOption, herdType: string) {
+  public static async byStage (id: number, selectedHistory: IHistoryOption, herdType: string) {
     const client = Database.connection()
     let result: any
 
@@ -15,8 +15,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            AND owner_id = '${id}'
           GROUP BY 
             stage;
         `)
@@ -29,8 +30,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            AND owner_id = '${id}'
           GROUP BY 
             stage;
         `)
@@ -43,8 +45,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             stage;
         `)
@@ -57,8 +60,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             stage;
         `)
@@ -70,7 +74,7 @@ export default class HerdReporter {
     return (await result)?.[0]
   }
 
-  public static async byGender (selectedHistory: IHistoryOption, herdType: string) {
+  public static async byGender (id: number, selectedHistory: IHistoryOption, herdType: string) {
     const client = Database.connection()
     let result: any
 
@@ -83,8 +87,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            AND owner_id = '${id}'
           GROUP BY 
             gender;
         `)
@@ -97,8 +102,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            AND owner_id = '${id}'
           GROUP BY 
             gender;
         `)
@@ -111,8 +117,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             gender;
         `)
@@ -125,8 +132,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             gender;
         `)
@@ -138,7 +146,7 @@ export default class HerdReporter {
     return (await result)?.[0]
   }
 
-  public static async byStatus (selectedHistory: IHistoryOption, herdType: string) {
+  public static async byStatus (id: number, selectedHistory: IHistoryOption, herdType: string) {
     const client = Database.connection()
     let result: any
 
@@ -151,8 +159,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            AND owner_id = '${id}'
           GROUP BY 
             status;
         `)
@@ -165,8 +174,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
+            AND owner_id = '${id}'
           GROUP BY 
             status;
         `)
@@ -179,8 +189,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             status;
         `)
@@ -193,8 +204,9 @@ export default class HerdReporter {
           FROM 
             herds 
           WHERE
-            type = '${herdType}' AND
-            (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            type = '${herdType}' 
+            AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             status;
         `)

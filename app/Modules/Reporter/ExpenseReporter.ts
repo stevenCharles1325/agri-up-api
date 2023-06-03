@@ -3,7 +3,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class ExpenseReporter {
   // HISTORY
-  public static async history (selectedHistory: IHistoryOption) {
+  public static async history (id:number, selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let expense: any
 
@@ -15,7 +15,9 @@ export default class ExpenseReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             expenses 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             MONTH(date);
         `)
@@ -28,7 +30,9 @@ export default class ExpenseReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             expenses 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             DAY(date);
         `)
@@ -41,7 +45,9 @@ export default class ExpenseReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             expenses 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             MONTH(date);
         `)
@@ -54,7 +60,9 @@ export default class ExpenseReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             expenses 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             YEAR(date);
         `)
@@ -67,7 +75,7 @@ export default class ExpenseReporter {
     return (await expense)?.[0]
   }
 
-  public static async type (selectedHistory: IHistoryOption) {
+  public static async type (id: number, selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let expense: any
 
@@ -79,7 +87,9 @@ export default class ExpenseReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             expenses 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             type;
         `)
@@ -92,7 +102,9 @@ export default class ExpenseReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             expenses 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             type;
         `)
@@ -105,7 +117,9 @@ export default class ExpenseReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             expenses 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             type;
         `)
@@ -118,7 +132,9 @@ export default class ExpenseReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             expenses 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             type;
         `)
@@ -132,7 +148,7 @@ export default class ExpenseReporter {
   }
 
   // TOTAL INCOME
-  public static async total (selectedHistory: IHistoryOption) {
+  public static async total (id: number, selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let expense: any
 
@@ -145,7 +161,9 @@ export default class ExpenseReporter {
               COALESCE(SUM(amount), 0) AS total_amount 
             FROM 
               expenses 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
               MONTH(date)
           ) AS t;
@@ -161,7 +179,9 @@ export default class ExpenseReporter {
               COALESCE(SUM(amount), 0) AS total_amount 
             FROM 
               expenses 
-            WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            WHERE 
+              TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+              AND owner_id = '${id}'
             GROUP BY 
               DAY(date)
           ) AS t;
@@ -177,7 +197,9 @@ export default class ExpenseReporter {
               COALESCE(SUM(amount), 0) AS total_amount 
             FROM 
               expenses 
-            WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+            WHERE 
+              TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+              AND owner_id = '${id}'
             GROUP BY 
               MONTH(date)
           ) AS t;
@@ -193,7 +215,9 @@ export default class ExpenseReporter {
               COALESCE(SUM(amount), 0) AS total_amount 
             FROM 
               expenses 
-            WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+            WHERE 
+              TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+              AND owner_id = '${id}'
             GROUP BY 
               YEAR(date)
           ) AS t;

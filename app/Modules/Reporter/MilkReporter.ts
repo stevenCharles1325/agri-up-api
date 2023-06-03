@@ -2,7 +2,7 @@ import { IHistoryOption } from "App/Interfaces/IHistoryOption";
 import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class MilkReporter {
-  public static async stocks (selectedHistory: IHistoryOption, herdType) {
+  public static async stocks (id: number, selectedHistory: IHistoryOption, herdType) {
     const client = Database.connection()
     let result: any
 
@@ -17,6 +17,7 @@ export default class MilkReporter {
           WHERE 
             herd_type = '${herdType}' AND 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             herd_type;
         `)
@@ -32,6 +33,7 @@ export default class MilkReporter {
           WHERE 
             herd_type = '${herdType}' AND 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             herd_type;
         `)
@@ -47,6 +49,7 @@ export default class MilkReporter {
           WHERE 
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             herd_type;
         `)
@@ -62,6 +65,7 @@ export default class MilkReporter {
           WHERE 
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), NOW()) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             herd_type;
         `)
@@ -74,7 +78,7 @@ export default class MilkReporter {
     return (await result)?.[0]
   }
 
-  public static async amountOfMilkSold (selectedHistory: IHistoryOption, herdType) {
+  public static async amountOfMilkSold (id: number, selectedHistory: IHistoryOption, herdType) {
     const client = Database.connection()
     let result: any
 
@@ -90,6 +94,7 @@ export default class MilkReporter {
             reason = 'sold' AND
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0)
+            AND owner_id = '${id}'
           GROUP BY 
             herd_type;
         `)
@@ -106,6 +111,7 @@ export default class MilkReporter {
             reason = 'sold' AND
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0)
+            AND owner_id = '${id}'
           GROUP BY 
             herd_type;
         `)
@@ -138,6 +144,7 @@ export default class MilkReporter {
             reason = 'sold' AND
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), NOW()) BETWEEN 1 AND 6)
+            AND owner_id = '${id}'
           GROUP BY 
             herd_type;
         `)
@@ -150,7 +157,7 @@ export default class MilkReporter {
     return (await result)?.[0]
   }
 
-  public static async reductions (selectedHistory: IHistoryOption) {
+  public static async reductions (id: number, selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let result: any
 
@@ -162,7 +169,9 @@ export default class MilkReporter {
             COALESCE(SUM(quantity), 0) AS total_quantity 
           FROM 
             milk_reductions 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             reason;
         `)
@@ -175,7 +184,9 @@ export default class MilkReporter {
             COALESCE(SUM(quantity), 0) AS total_quantity 
           FROM 
             milk_reductions 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             reason;
         `)
@@ -188,7 +199,9 @@ export default class MilkReporter {
             COALESCE(SUM(quantity), 0) AS total_quantity 
           FROM 
             milk_reductions 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             reason;
         `)
@@ -201,7 +214,9 @@ export default class MilkReporter {
             COALESCE(SUM(quantity), 0) AS total_quantity 
           FROM 
             milk_reductions 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), NOW()) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), NOW()) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             reason;
         `)

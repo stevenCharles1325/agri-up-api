@@ -3,7 +3,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class IncomeReporter {
   // HISTORY
-  public static async history (selectedHistory: IHistoryOption) {
+  public static async history (id: number, selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let income: any
 
@@ -15,7 +15,9 @@ export default class IncomeReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             incomes 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             MONTH(date);
         `)
@@ -28,7 +30,9 @@ export default class IncomeReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             incomes 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             DAY(date);
         `)
@@ -41,7 +45,9 @@ export default class IncomeReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             incomes 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             MONTH(date);
         `)
@@ -54,7 +60,9 @@ export default class IncomeReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             incomes 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             YEAR(date);
         `)
@@ -67,7 +75,7 @@ export default class IncomeReporter {
     return (await income)?.[0]
   }
 
-  public static async sale (selectedHistory: IHistoryOption) {
+  public static async sale (id: number, selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let income: any
 
@@ -79,7 +87,9 @@ export default class IncomeReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             incomes 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             YEAR(date),
             type;
@@ -93,7 +103,9 @@ export default class IncomeReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             incomes 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
             DAY(date),
             type;
@@ -107,7 +119,9 @@ export default class IncomeReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             incomes 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             MONTH(date),
             type;
@@ -121,7 +135,9 @@ export default class IncomeReporter {
             COALESCE(SUM(amount), 0) AS total_amount 
           FROM 
             incomes 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+            AND owner_id = '${id}'
           GROUP BY 
             YEAR(date),
             type;
@@ -136,7 +152,7 @@ export default class IncomeReporter {
   }
 
   // TOTAL INCOME
-  public static async total (selectedHistory: IHistoryOption) {
+  public static async total (id: number, selectedHistory: IHistoryOption) {
     const client = Database.connection()
     let income: any
 
@@ -149,7 +165,9 @@ export default class IncomeReporter {
               COALESCE(SUM(amount), 0) AS total_amount 
             FROM 
               incomes 
-          WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
               MONTH(date)
           ) AS t;
@@ -165,7 +183,9 @@ export default class IncomeReporter {
               COALESCE(SUM(amount), 0) AS total_amount 
             FROM 
               incomes 
-          WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+          WHERE 
+            TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
+            AND owner_id = '${id}'
           GROUP BY 
               DAY(date)
           ) AS t;
@@ -181,7 +201,9 @@ export default class IncomeReporter {
               COALESCE(SUM(amount), 0) AS total_amount 
             FROM 
               incomes 
-            WHERE TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+            WHERE 
+              TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
+              AND owner_id = '${id}'
             GROUP BY 
               MONTH(date)
           ) AS t;
@@ -197,7 +219,9 @@ export default class IncomeReporter {
               COALESCE(SUM(amount), 0) AS total_amount 
             FROM 
               incomes 
-            WHERE TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+            WHERE 
+              TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
+              AND owner_id = '${id}'
             GROUP BY 
               YEAR(date)
           ) AS t;

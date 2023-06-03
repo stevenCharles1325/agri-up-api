@@ -22,13 +22,13 @@ export default class ReportsController {
           
     try {
 
-      const incomeHistory = await IncomeReporter.history(cleansedDateFilter)
-      const incomeTotal = await IncomeReporter.total(cleansedDateFilter)
-      const incomeSale = await IncomeReporter.sale(cleansedDateFilter)
+      const incomeHistory = await IncomeReporter.history(user?.id, cleansedDateFilter)
+      const incomeTotal = await IncomeReporter.total(user?.id, cleansedDateFilter)
+      const incomeSale = await IncomeReporter.sale(user?.id, cleansedDateFilter)
   
-      const expenseHistory = await ExpenseReporter.history(cleansedDateFilter)
-      const expenseTotal = await ExpenseReporter.total(cleansedDateFilter)
-      const expenseType = await ExpenseReporter.type(cleansedDateFilter)
+      const expenseHistory = await ExpenseReporter.history(user?.id, cleansedDateFilter)
+      const expenseTotal = await ExpenseReporter.total(user?.id, cleansedDateFilter)
+      const expenseType = await ExpenseReporter.type(user?.id, cleansedDateFilter)
   
       const income = {
         history: incomeHistory,
@@ -67,9 +67,9 @@ export default class ReportsController {
       ) as IHistoryOption
           
     try {
-      const stage = await HerdReporter.byStage(cleansedDateFilter, herdType)
-      const gender = await HerdReporter.byGender(cleansedDateFilter, herdType)
-      const status = await HerdReporter.byStatus(cleansedDateFilter, herdType)
+      const stage = await HerdReporter.byStage(user?.id, cleansedDateFilter, herdType)
+      const gender = await HerdReporter.byGender(user?.id, cleansedDateFilter, herdType)
+      const status = await HerdReporter.byStatus(user?.id, cleansedDateFilter, herdType)
       
       return response.ok({
         stage,
@@ -99,9 +99,9 @@ export default class ReportsController {
       ) as IHistoryOption
           
     try {
-      const stocks = await MilkReporter.stocks(cleansedDateFilter, herdType)
-      const amountOfMilkSold = await MilkReporter.amountOfMilkSold(cleansedDateFilter, herdType)
-      const reduction = await MilkReporter.reductions(cleansedDateFilter)
+      const stocks = await MilkReporter.stocks(user?.id, cleansedDateFilter, herdType)
+      const amountOfMilkSold = await MilkReporter.amountOfMilkSold(user?.id, cleansedDateFilter, herdType)
+      const reduction = await MilkReporter.reductions(user?.id, cleansedDateFilter)
       
       return response.ok({
         stocks,

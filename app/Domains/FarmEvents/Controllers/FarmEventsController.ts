@@ -52,6 +52,7 @@ export default class FarmEventsController {
         const others = JSON.parse(payload.others);
 
         if (others.expenses?.length) {
+          console.log(others);
           const expense = {
             type: "Others",
             herds_type: payload.herdType,

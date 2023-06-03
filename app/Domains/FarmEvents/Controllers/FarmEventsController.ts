@@ -8,7 +8,14 @@ export default class FarmEventsController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use('jwt').authenticate()
     const user = auth.use('jwt').user
-    const { category, eventType, herdType, herdTag } = request.all()
+    const { 
+      order = 'asc', 
+      timeFrame, 
+      category, 
+      eventType, 
+      herdType, 
+      herdTag 
+    } = request.all()
 
     if (!user) return response.unauthorized('Unauthorized')
 
@@ -21,7 +28,25 @@ export default class FarmEventsController {
     if (eventType) farmEventsQuery.where({ eventType })
     if (category) farmEventsQuery.where({ category })
 
-    const farmEvents = await farmEventsQuery.orderBy('start_at')
+    switch (timeFrame) {
+      case 'past-events':
+        farmEventsQuery.whereRaw(`DATE(remind_at) < DATE(NOW())`)
+        break;
+        
+      case 'current-events':
+        farmEventsQuery.whereRaw(`DATE(remind_at) = DATE(NOW())`)
+        break;
+
+      case 'future-events':
+        farmEventsQuery.whereRaw(`DATE(remind_at) > DATE(NOW())`)
+        break;
+
+      default:
+        farmEventsQuery.whereRaw(`DATE(remind_at) = DATE(NOW())`)
+        break;
+    }
+
+    const farmEvents = await farmEventsQuery.orderBy('start_at', order)
     return response.ok(farmEvents)
   }
 

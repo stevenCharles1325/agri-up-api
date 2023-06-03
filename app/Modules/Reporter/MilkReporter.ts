@@ -17,7 +17,7 @@ export default class MilkReporter {
           WHERE 
             herd_type = '${herdType}' AND 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             herd_type;
         `)
@@ -33,7 +33,7 @@ export default class MilkReporter {
           WHERE 
             herd_type = '${herdType}' AND 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             herd_type;
         `)
@@ -49,7 +49,7 @@ export default class MilkReporter {
           WHERE 
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             herd_type;
         `)
@@ -65,7 +65,7 @@ export default class MilkReporter {
           WHERE 
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), NOW()) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             herd_type;
         `)
@@ -94,7 +94,7 @@ export default class MilkReporter {
             reason = 'sold' AND
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             herd_type;
         `)
@@ -111,7 +111,7 @@ export default class MilkReporter {
             reason = 'sold' AND
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             herd_type;
         `)
@@ -144,7 +144,7 @@ export default class MilkReporter {
             reason = 'sold' AND
             herd_type = '${herdType}' AND 
             (TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), NOW()) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             herd_type;
         `)
@@ -171,7 +171,7 @@ export default class MilkReporter {
             milk_reductions 
           WHERE 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             reason;
         `)
@@ -186,7 +186,7 @@ export default class MilkReporter {
             milk_reductions 
           WHERE 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             reason;
         `)
@@ -201,7 +201,7 @@ export default class MilkReporter {
             milk_reductions 
           WHERE 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(created_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             reason;
         `)
@@ -216,7 +216,7 @@ export default class MilkReporter {
             milk_reductions 
           WHERE 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(created_at), NOW()) BETWEEN 1 AND 6
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             reason;
         `)

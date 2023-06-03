@@ -17,7 +17,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             stage;
         `)
@@ -32,7 +32,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             stage;
         `)
@@ -47,7 +47,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             stage;
         `)
@@ -62,7 +62,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             stage;
         `)
@@ -89,7 +89,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             gender;
         `)
@@ -104,7 +104,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             gender;
         `)
@@ -119,7 +119,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             gender;
         `)
@@ -134,7 +134,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             gender;
         `)
@@ -161,7 +161,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             status;
         `)
@@ -176,7 +176,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) = 0)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             status;
         `)
@@ -191,7 +191,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(YEAR, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             status;
         `)
@@ -206,7 +206,7 @@ export default class HerdReporter {
           WHERE
             type = '${herdType}' 
             AND (TIMESTAMPDIFF(MONTH, TIMESTAMP(entered_at), TIMESTAMP(NOW())) BETWEEN 1 AND 6)
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             status;
         `)

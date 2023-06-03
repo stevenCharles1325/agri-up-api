@@ -17,7 +17,7 @@ export default class IncomeReporter {
             incomes 
           WHERE 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             MONTH(date);
         `)
@@ -32,7 +32,7 @@ export default class IncomeReporter {
             incomes 
           WHERE 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             DAY(date);
         `)
@@ -47,7 +47,7 @@ export default class IncomeReporter {
             incomes 
           WHERE 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             MONTH(date);
         `)
@@ -62,7 +62,7 @@ export default class IncomeReporter {
             incomes 
           WHERE 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             YEAR(date);
         `)
@@ -89,7 +89,7 @@ export default class IncomeReporter {
             incomes 
           WHERE 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             YEAR(date),
             type;
@@ -105,7 +105,7 @@ export default class IncomeReporter {
             incomes 
           WHERE 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             DAY(date),
             type;
@@ -121,7 +121,7 @@ export default class IncomeReporter {
             incomes 
           WHERE 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             MONTH(date),
             type;
@@ -137,7 +137,7 @@ export default class IncomeReporter {
             incomes 
           WHERE 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
             YEAR(date),
             type;
@@ -167,7 +167,7 @@ export default class IncomeReporter {
               incomes 
           WHERE 
             TIMESTAMPDIFF(YEAR, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
               MONTH(date)
           ) AS t;
@@ -185,7 +185,7 @@ export default class IncomeReporter {
               incomes 
           WHERE 
             TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) = 0
-            AND owner_id = '${id}'
+            AND owner_id = ${id}
           GROUP BY 
               DAY(date)
           ) AS t;
@@ -203,7 +203,7 @@ export default class IncomeReporter {
               incomes 
             WHERE 
               TIMESTAMPDIFF(MONTH, TIMESTAMP(date), TIMESTAMP(NOW())) BETWEEN 1 AND 6
-              AND owner_id = '${id}'
+              AND owner_id = ${id}
             GROUP BY 
               MONTH(date)
           ) AS t;
@@ -221,7 +221,7 @@ export default class IncomeReporter {
               incomes 
             WHERE 
               TIMESTAMPDIFF(YEAR, TIMESTAMP(date), NOW()) BETWEEN 1 AND 6
-              AND owner_id = '${id}'
+              AND owner_id = ${id}
             GROUP BY 
               YEAR(date)
           ) AS t;

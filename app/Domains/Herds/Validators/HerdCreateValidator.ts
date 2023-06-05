@@ -11,7 +11,7 @@ export default class HerdCreateValidator {
         table: "herds", 
         column: "tag",
         where: {
-          ownerId: this.ctx.auth.use('jwt').user?.id,
+          owner_id: this.ctx.auth.use('jwt').user?.id,
         }
       }),
     ]),

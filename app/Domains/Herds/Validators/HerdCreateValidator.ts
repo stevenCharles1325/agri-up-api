@@ -7,7 +7,13 @@ export default class HerdCreateValidator {
   public schema = schema.create({
     tag: schema.string({ trim: true }, [
       rules.minLength(4),
-      rules.unique({ table: "herds", column: "tag" }),
+      rules.unique({ 
+        table: "herds", 
+        column: "tag",
+        where: {
+          ownerId: this.ctx.auth.use('jwt').user?.id,
+        }
+      }),
     ]),
     damTag: schema.string.optional([
       rules.exists({ table: "herds", column: "tag" }),

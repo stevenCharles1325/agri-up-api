@@ -28,7 +28,7 @@ export default class HerdsController {
       const query = Herd.query()
         .where("type", herdType)
         .where("owner_id", user.id)
-        .whereNull("deleted_at");
+        // .whereNull("deleted_at");
 
       if (search) {
         query
@@ -49,7 +49,11 @@ export default class HerdsController {
       }
 
       if (status) {
-        query.where("status", status);
+        if (status === 'archived') {
+          query.whereNotNull("deleted_at");
+        } else {
+          query.where("status", status);
+        }
       }
 
       const milks = await query.orderBy("createdAt", "desc");

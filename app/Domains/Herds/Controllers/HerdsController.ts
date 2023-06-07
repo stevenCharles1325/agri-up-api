@@ -154,8 +154,8 @@ export default class HerdsController {
 
     const offSprings = await Herd.query()
       .whereNot("id", record.id)
-      .where("dam_tag", record.tag)
-      .orWhere("sire_tag", record.tag);
+      .where("dam_tag", record.id)
+      .orWhere("sire_tag", record.id);
 
     let group: any = null;
     if (record?.groupId) {

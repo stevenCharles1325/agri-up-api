@@ -16,11 +16,13 @@ export default class extends BaseSchema {
         .onDelete("CASCADE");
       table
         .integer("dam_tag")
+        .unsigned()
         .nullable()
         .references("herds.id")
         .onDelete("SET NULL");
       table
         .integer("sire_tag")
+        .unsigned()
         .nullable()
         .references("herds.id")
         .onDelete("SET NULL");

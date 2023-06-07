@@ -33,7 +33,7 @@ export default class Herd extends BaseModel {
   public type: string;
 
   @column()
-  public damTag: string;
+  public damTag: number;
 
   @belongsTo(() => Herd, {
     localKey: "tag",
@@ -42,7 +42,7 @@ export default class Herd extends BaseModel {
   public dam: BelongsTo<typeof Herd>;
 
   @column()
-  public sireTag: string;
+  public sireTag: number;
 
   @belongsTo(() => Herd, {
     localKey: "tag",

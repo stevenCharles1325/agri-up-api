@@ -17,12 +17,12 @@ export default class extends BaseSchema {
       table
         .string("dam_tag")
         .nullable()
-        .references("herds.tag")
+        .references("herds.id")
         .onDelete("SET NULL");
       table
         .string("sire_tag")
         .nullable()
-        .references("herds.tag")
+        .references("herds.id")
         .onDelete("SET NULL");
       table
         .integer("group_id")

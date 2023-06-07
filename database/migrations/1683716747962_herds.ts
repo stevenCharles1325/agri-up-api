@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments("id").unique();
+      table.increments("id");
       table.string("tag");
 
       table.enum("type", ["cattle", "swine", "goat"]);
@@ -15,12 +15,12 @@ export default class extends BaseSchema {
         .references("users.id")
         .onDelete("CASCADE");
       table
-        .string("dam_tag")
+        .integer("dam_tag")
         .nullable()
         .references("herds.id")
         .onDelete("SET NULL");
       table
-        .string("sire_tag")
+        .integer("sire_tag")
         .nullable()
         .references("herds.id")
         .onDelete("SET NULL");

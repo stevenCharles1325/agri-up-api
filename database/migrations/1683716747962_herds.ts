@@ -18,36 +18,36 @@ export default class extends BaseSchema {
         .string("dam_tag")
         .nullable()
         .references("herds.tag")
-        .onDelete("CASCADE");
+        .onDelete("SET NULL");
       table
         .string("sire_tag")
         .nullable()
         .references("herds.tag")
-        .onDelete("CASCADE");
+        .onDelete("SET NULL");
       table
         .integer("group_id")
         .nullable()
         .unsigned()
         .references("herd_groups.id")
-        .onDelete("CASCADE");
+        .onDelete("SET NULL");
       table
         .integer("purpose_id")
         .nullable()
         .unsigned()
         .references("purposes.id")
-        .onDelete("CASCADE");
+        .onDelete("SET NULL");
       table
         .integer("breed_id")
         .nullable()
         .unsigned()
         .references("breeds.id")
-        .onDelete("CASCADE");
+        .onDelete("SET NULL");
       table
         .integer("remark_id")
         .nullable()
         .unsigned()
         .references("remarks.id")
-        .onDelete("CASCADE");
+        .onDelete("SET NULL");
 
       table
         .enum("status", [

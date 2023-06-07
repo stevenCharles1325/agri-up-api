@@ -36,7 +36,7 @@ export default class Herd extends BaseModel {
   public damTag: number;
 
   @belongsTo(() => Herd, {
-    localKey: "tag",
+    localKey: "id",
     foreignKey: "damTag",
   })
   public dam: BelongsTo<typeof Herd>;
@@ -45,7 +45,7 @@ export default class Herd extends BaseModel {
   public sireTag: number;
 
   @belongsTo(() => Herd, {
-    localKey: "tag",
+    localKey: "id",
     foreignKey: "sireTag",
   })
   public sire: BelongsTo<typeof Herd>;

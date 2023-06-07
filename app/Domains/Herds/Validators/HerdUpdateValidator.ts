@@ -5,10 +5,10 @@ export default class HerdUpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    damTag: schema.string.optional({ trim: true }, [
+    damTag: schema.number.optional([
       rules.exists({ table: "herds", column: "tag" }),
     ]),
-    sireTag: schema.string.optional({ trim: true }, [
+    sireTag: schema.number.optional([
       rules.exists({ table: "herds", column: "tag" }),
     ]),
     groupId: schema.number.optional(),

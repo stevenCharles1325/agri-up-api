@@ -15,10 +15,10 @@ export default class HerdCreateValidator {
         }
       }),
     ]),
-    damTag: schema.string.optional([
+    damTag: schema.number.optional([
       rules.exists({ table: "herds", column: "id" }),
     ]),
-    sireTag: schema.string.optional([
+    sireTag: schema.number.optional([
       rules.exists({ table: "herds", column: "id" }),
     ]),
     groupId: schema.number.optional([

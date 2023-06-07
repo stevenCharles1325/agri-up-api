@@ -56,8 +56,10 @@ export default class HerdsController {
         }
       }
 
-      const milks = await query.orderBy("createdAt", "desc");
-      return response.ok(milks);
+      const herds = await query
+        .orderBy("created_at", "desc")
+        .orderBy("deleted_at", "asc");
+      return response.ok(herds);
     } catch (err) {
       console.log(err);
 

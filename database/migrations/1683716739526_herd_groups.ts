@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.string('name')
       table.enum('herd_type', ['cattle', 'swine', 'goat'])
 
-      table.unique(['name', 'herd_type'])
+      table.unique(['owner_id', 'name', 'herd_type'])
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

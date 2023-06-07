@@ -17,17 +17,29 @@ export default class UsersController {
       const cattleCount = await herdsQuery
         .where('type', '=', 'cattle')
         .whereNull('deleted_at')
-        .whereNotIn('status', ['sold', 'culled', 'deceased'])
+        .where(cattleQ => {
+          cattleQ
+            .whereNull('status')
+            .orWhereNotIn('status', ['sold', 'culled', 'deceased'])
+        })
         .count('* AS total_cattle')
       const swineCount = await herdsQuery
         .where('type', '=', 'swine')
         .whereNull('deleted_at')
-        .whereNotIn('status', ['sold', 'culled', 'deceased'])
+        .where(swineQ => {
+          swineQ
+            .whereNull('status')
+            .orWhereNotIn('status', ['sold', 'culled', 'deceased'])
+        })
         .count('* AS total_swine')
       const goatCount = await herdsQuery
         .where('type', '=', 'goat')
         .whereNull('deleted_at')
-        .whereNotIn('status', ['sold', 'culled', 'deceased'])
+        .where(goatQ => {
+          goatQ
+            .whereNull('status')
+            .orWhereNotIn('status', ['sold', 'culled', 'deceased'])
+        })
         .count('* AS total_goat')
 
       // To Add: Community Posts

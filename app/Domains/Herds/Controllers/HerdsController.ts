@@ -79,7 +79,7 @@ export default class HerdsController {
       stage,
       gender,
       remark,
-      stagesNot = [],
+      statusNot = [],
       order = "desc",
     } = request.all();
 
@@ -91,12 +91,12 @@ export default class HerdsController {
     if (remark) herdQuery.where("remark", remark);
     if (tag) herdQuery.where("tag", "LIKE", `%${tag}%`);
 
-    if (stagesNot.length) {
-      if (stagesNot.some(stage => stage === 'archived')) {
+    if (statusNot.length) {
+      if (statusNot.some(stage => stage === 'archived')) {
         herdQuery.whereNull("deleted_at");
       }
 
-      herdQuery.whereNotIn("stage", stagesNot);
+      herdQuery.whereNotIn("status", statusNot);
     }
   
     return await herdQuery

@@ -112,7 +112,7 @@ export default class FeedsController {
       if (payload.source === "bought") {
         const expense = {
           type: "Others",
-          herdType,
+          herds_type: herdType,
           date: payload.date,
           amount: payload.totalAmount,
           notes: payload.notes,

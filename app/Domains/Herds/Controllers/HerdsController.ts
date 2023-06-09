@@ -96,9 +96,10 @@ export default class HerdsController {
         herdQuery.whereNull("deleted_at");
       }
 
-      herdQuery
-        .whereNotIn("status", statusNot)
-        .orWhereNull("status");
+      herdQuery.where(q => {
+        q.whereNotIn("status", statusNot)
+          .orWhereNull("status");
+      })
     }
   
     return await herdQuery

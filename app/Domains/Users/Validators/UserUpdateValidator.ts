@@ -8,7 +8,16 @@ export default class UserUpdateValidator {
     username: schema.string.optional({}, [ rules.minLength(5) ]),
     firstName: schema.string.optional({}, [ rules.minLength(2) ]),
     lastName: schema.string.optional({}, [ rules.minLength(2) ]),
-    email: schema.string.optional({}, [ rules.email(), rules.unique({ table: 'users', column: 'email' }) ]),
+    email: schema.string.optional({}, [ 
+      rules.email(), 
+      rules.unique({ 
+        table: 'users', 
+        column: 'email',
+        whereNot: {
+          id: this.ctx.auth.use('jwt').user?.id,
+        } 
+      }) 
+    ]),
     password: schema.string.optional({}, [ rules.minLength(2) ]),
   })
 

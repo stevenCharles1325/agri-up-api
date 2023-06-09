@@ -79,6 +79,7 @@ export default class HerdsController {
       stage,
       gender,
       remark,
+      stagesNot = [],
       order = "desc",
     } = request.all();
 
@@ -90,6 +91,14 @@ export default class HerdsController {
     if (remark) herdQuery.where("remark", remark);
     if (tag) herdQuery.where("tag", "LIKE", `%${tag}%`);
 
+    if (stagesNot.length) {
+      if (stagesNot.some(stage => stage === 'archived')) {
+        herdQuery.whereNull("deleted_at");
+      }
+
+      herdQuery.whereNotIn("stage", stagesNot);
+    }
+  
     return await herdQuery
       .orderBy("createdAt", order)
       .preload("sire")

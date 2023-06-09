@@ -7,13 +7,13 @@ export default class CalendarsController {
   public async index({ auth, request, response }: HttpContextContract) {
     await auth.use("jwt").authenticate();
     const user = auth.use("jwt").user;
-    const { startDate, endDate, status = 'all' } = request.all();
+    const { type = 'reminder', startDate, endDate, status = 'all' } = request.all();
 
     if (!user) return response.unauthorized("Unauthorized");
 
     try {
       return await Calendar.query()
-        .where({ ownerId: user.id })
+        .where({ ownerId: user.id, type })
         .if(startDate && endDate, (passQuery) => {
           passQuery.whereRaw(`DATE(remind_at) = DATE('${startDate}')`);
         })
